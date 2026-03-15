@@ -188,8 +188,8 @@
 		left: 50%;
 		width: 0;
 		height: 0;
-		animation: orbit-ring-spin 50s linear infinite;
-		animation-delay: calc(-50s / var(--total) * var(--idx));
+		animation: orbit-ring-spin 160s linear infinite;
+		animation-delay: calc(-160s / var(--total) * var(--idx));
 	}
 
 	@keyframes orbit-ring-spin {
@@ -212,8 +212,8 @@
 		cursor: pointer;
 		text-decoration: none;
 		transition: background 0.3s, border-color 0.3s;
-		animation: card-counter-spin 50s linear infinite;
-		animation-delay: calc(-50s / var(--total) * var(--idx));
+		animation: card-counter-spin 160s linear infinite;
+		animation-delay: calc(-160s / var(--total) * var(--idx));
 	}
 
 	@keyframes card-counter-spin {
