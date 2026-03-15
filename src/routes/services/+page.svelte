@@ -39,13 +39,13 @@
 </script>
 
 <svelte:head>
-	<title>Select Service — Ngan Ha Spa</title>
+	<title>Select Experience — Ngan Ha Spa</title>
 </svelte:head>
 
 <main>
 	<div class="page" class:visible>
 		<div class="header">
-			<h1 class="title">Select Service</h1>
+			<h1 class="title">Select Experience</h1>
 			<div class="divider"></div>
 		</div>
 
@@ -82,7 +82,7 @@
 			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 				<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
 			</svg>
-			Back
+			Home
 		</a>
 	</div>
 </main>

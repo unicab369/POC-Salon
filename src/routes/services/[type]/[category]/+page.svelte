@@ -158,6 +158,8 @@
 	let categoryId = $derived($page.params.category);
 	let category = $derived(categories.find(c => c.id === categoryId));
 	type BodyPref = 'focus' | 'avoid' | '';
+	type TherapistPref = 'male' | 'female' | 'random';
+	type StrengthPref = 'light' | 'medium' | 'strong';
 	const bodyAreas = ['Head', 'Neck', 'Shoulder', 'Arm', 'Back', 'Thigh', 'Calf', 'Foot'] as const;
 
 	let selectedServices = $state<Map<string, number>>(new Map());
@@ -165,20 +167,43 @@
 	let showBodyCustomize = $state(false);
 	let pendingBodyService = $state<{ name: string; minutes: number } | null>(null);
 	let bodyPrefs = $state<Record<string, BodyPref>>(Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref])));
+	let therapistPref = $state<TherapistPref>('random');
+	let strengthPref = $state<StrengthPref>('medium');
+	let snackbar = $state('');
+	let snackbarTimeout: ReturnType<typeof setTimeout>;
+
 	let canScrollUp = $state(false);
 	let canScrollDown = $state(false);
 	let listEl = $state<HTMLElement | null>(null);
-
 	let listMask = $state('');
+
+	let bodyCanScrollUp = $state(false);
+	let bodyCanScrollDown = $state(false);
+	let bodyScrollEl = $state<HTMLElement | null>(null);
+	let bodyMask = $state('');
+
+	function buildMask(el: HTMLElement): { up: boolean; down: boolean; mask: string } {
+		const up = el.scrollTop > 10;
+		const down = el.scrollTop + el.clientHeight < el.scrollHeight - 10;
+		const top = up ? 'transparent 0%, black 30px' : 'black 0%';
+		const bottom = down ? 'black calc(100% - 30px), transparent 100%' : 'black 100%';
+		return { up, down, mask: `linear-gradient(to bottom, ${top}, ${bottom})` };
+	}
 
 	function checkScroll() {
 		if (!listEl) return;
-		canScrollUp = listEl.scrollTop > 10;
-		canScrollDown = listEl.scrollTop + listEl.clientHeight < listEl.scrollHeight - 10;
+		const r = buildMask(listEl);
+		canScrollUp = r.up;
+		canScrollDown = r.down;
+		listMask = r.mask;
+	}
 
-		const top = canScrollUp ? 'transparent 0%, black 30px' : 'black 0%';
-		const bottom = canScrollDown ? 'black calc(100% - 30px), transparent 100%' : 'black 100%';
-		listMask = `linear-gradient(to bottom, ${top}, ${bottom})`;
+	function checkBodyScroll() {
+		if (!bodyScrollEl) return;
+		const r = buildMask(bodyScrollEl);
+		bodyCanScrollUp = r.up;
+		bodyCanScrollDown = r.down;
+		bodyMask = r.mask;
 	}
 
 	let totalVND = $derived(() => {
@@ -198,7 +223,13 @@
 		return (totalVND() / VND_TO_USD).toFixed(2);
 	});
 
+	function dismissSnackbar() {
+		clearTimeout(snackbarTimeout);
+		snackbar = '';
+	}
+
 	function handleServiceTap(service: Service) {
+		dismissSnackbar();
 		if (selectedServices.has(service.name)) {
 			const next = new Map(selectedServices);
 			next.delete(service.name);
@@ -213,8 +244,10 @@
 		if (categoryId === 'body-massage') {
 			pendingBodyService = { name: popupService.name, minutes };
 			bodyPrefs = Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref]));
-			popupService = null;
+			therapistPref = 'random';
+			strengthPref = 'medium';
 			showBodyCustomize = true;
+			requestAnimationFrame(() => { popupService = null; });
 		} else {
 			const next = new Map(selectedServices);
 			next.set(popupService.name, minutes);
@@ -256,6 +289,16 @@
 		}
 	}
 
+	function handleNext() {
+		if (selectedServices.size === 0) {
+			clearTimeout(snackbarTimeout);
+			snackbar = 'Please add at least one service';
+			snackbarTimeout = setTimeout(() => { snackbar = ''; }, 3000);
+			return;
+		}
+		// TODO: navigate to next step
+	}
+
 	function getSelectedPrice(service: Service): number {
 		const minutes = selectedServices.get(service.name);
 		if (minutes == null) return service.durations[0].priceVND;
@@ -288,12 +331,16 @@
 
 <svelte:window onkeydown={handleBackdropKeydown} />
 
+{#snippet pageHeader(text: string)}
+	<div class="header">
+		<h1 class="title">{text}</h1>
+		<div class="divider"></div>
+	</div>
+{/snippet}
+
 <main>
 	<div class="page" class:visible>
-		<div class="header">
-			<h1 class="title">{category?.name ?? 'Services'}</h1>
-			<div class="divider"></div>
-		</div>
+		{@render pageHeader(category?.name ?? 'Services')}
 
 		{#if category}
 			<div class="service-list-wrapper">
@@ -353,11 +400,15 @@
 					</svg>
 					Back
 				</a>
-				<button class="btn btn-next" disabled={selectedServices.size === 0}>Next</button>
+				<button class="btn btn-next" onclick={handleNext}>Next</button>
 			</div>
 		</footer>
 	</div>
 </main>
+
+{#if snackbar}
+	<div class="snackbar">{snackbar}</div>
+{/if}
 
 {#if popupService}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -384,6 +435,98 @@
 					</button>
 				{/each}
 			</div>
+		</div>
+	</div>
+{/if}
+
+{#if showBodyCustomize}
+	<div class="body-modal">
+		{@render pageHeader('Customize Your Massage')}
+		<div class="body-scroll-wrapper">
+			<div class="scroll-hint scroll-hint-up" class:visible={bodyCanScrollUp}>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M18 15l-6-6-6 6" />
+				</svg>
+			</div>
+			<div class="scroll-hint scroll-hint-down" class:visible={bodyCanScrollDown}>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M6 9l6 6 6-6" />
+				</svg>
+			</div>
+		<div class="body-modal-scroll" bind:this={bodyScrollEl} onscroll={checkBodyScroll} style="-webkit-mask-image: {bodyMask}; mask-image: {bodyMask}">
+			<div class="customize-section">
+				<h3 class="section-label">Therapist</h3>
+				<div class="option-row">
+					<button class="option-btn" class:active={therapistPref === 'random'} onclick={() => therapistPref = 'random'}>Random</button>
+					<button class="option-btn" class:active={therapistPref === 'male'} onclick={() => therapistPref = 'male'}>Male</button>
+					<button class="option-btn" class:active={therapistPref === 'female'} onclick={() => therapistPref = 'female'}>Female</button>
+				</div>
+			</div>
+
+			<div class="customize-section">
+				<h3 class="section-label">Strength</h3>
+				<div class="option-row">
+					<button class="option-btn" class:active={strengthPref === 'light'} onclick={() => strengthPref = 'light'}>Light</button>
+					<button class="option-btn" class:active={strengthPref === 'medium'} onclick={() => strengthPref = 'medium'}>Medium</button>
+					<button class="option-btn" class:active={strengthPref === 'strong'} onclick={() => strengthPref = 'strong'}>Strong</button>
+				</div>
+			</div>
+
+			<div class="customize-section">
+				<h3 class="section-label">Focus Areas</h3>
+				<p class="body-popup-desc">Tap to toggle: Focus, Avoid, or skip</p>
+
+				<div class="body-layout">
+					<div class="body-figure">
+						<svg viewBox="0 0 120 320" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+							<!-- Head -->
+							<circle cx="60" cy="24" r="16" stroke={bodyPrefs['Head'] === 'focus' ? '#50c878' : bodyPrefs['Head'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Head'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Head'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<!-- Neck -->
+							<rect x="54" y="40" width="12" height="14" rx="4" stroke={bodyPrefs['Neck'] === 'focus' ? '#50c878' : bodyPrefs['Neck'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Neck'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Neck'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<!-- Shoulders -->
+							<path d="M42 56 Q30 58 22 70" stroke={bodyPrefs['Shoulder'] === 'focus' ? '#50c878' : bodyPrefs['Shoulder'] === 'avoid' ? '#e85454' : '#6b5d4d'} stroke-width="8" fill="none" opacity="0.6" />
+							<path d="M78 56 Q90 58 98 70" stroke={bodyPrefs['Shoulder'] === 'focus' ? '#50c878' : bodyPrefs['Shoulder'] === 'avoid' ? '#e85454' : '#6b5d4d'} stroke-width="8" fill="none" opacity="0.6" />
+							<!-- Torso / Back -->
+							<rect x="34" y="54" width="52" height="70" rx="10" stroke={bodyPrefs['Back'] === 'focus' ? '#50c878' : bodyPrefs['Back'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Back'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Back'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<!-- Arms -->
+							<rect x="10" y="70" width="16" height="60" rx="8" stroke={bodyPrefs['Arm'] === 'focus' ? '#50c878' : bodyPrefs['Arm'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Arm'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Arm'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<rect x="94" y="70" width="16" height="60" rx="8" stroke={bodyPrefs['Arm'] === 'focus' ? '#50c878' : bodyPrefs['Arm'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Arm'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Arm'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<!-- Thighs -->
+							<rect x="34" y="128" width="22" height="60" rx="10" stroke={bodyPrefs['Thigh'] === 'focus' ? '#50c878' : bodyPrefs['Thigh'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Thigh'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Thigh'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<rect x="64" y="128" width="22" height="60" rx="10" stroke={bodyPrefs['Thigh'] === 'focus' ? '#50c878' : bodyPrefs['Thigh'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Thigh'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Thigh'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<!-- Calves -->
+							<rect x="36" y="192" width="18" height="60" rx="8" stroke={bodyPrefs['Calf'] === 'focus' ? '#50c878' : bodyPrefs['Calf'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Calf'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Calf'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<rect x="66" y="192" width="18" height="60" rx="8" stroke={bodyPrefs['Calf'] === 'focus' ? '#50c878' : bodyPrefs['Calf'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Calf'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Calf'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<!-- Feet -->
+							<ellipse cx="45" cy="264" rx="12" ry="8" stroke={bodyPrefs['Foot'] === 'focus' ? '#50c878' : bodyPrefs['Foot'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Foot'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Foot'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+							<ellipse cx="75" cy="264" rx="12" ry="8" stroke={bodyPrefs['Foot'] === 'focus' ? '#50c878' : bodyPrefs['Foot'] === 'avoid' ? '#e85454' : '#6b5d4d'} fill={bodyPrefs['Foot'] === 'focus' ? 'rgba(80,200,120,0.15)' : bodyPrefs['Foot'] === 'avoid' ? 'rgba(232,84,84,0.15)' : 'rgba(107,93,77,0.08)'} />
+						</svg>
+					</div>
+
+					<div class="body-areas">
+						{#each bodyAreas as area}
+							<button class="body-area-btn" class:focus={bodyPrefs[area] === 'focus'} class:avoid={bodyPrefs[area] === 'avoid'} onclick={() => toggleBodyPref(area)}>
+								<span class="area-name">{area}</span>
+								<span class="area-status">
+									{#if bodyPrefs[area] === 'focus'}
+										<span class="status-badge status-focus">Focus</span>
+									{:else if bodyPrefs[area] === 'avoid'}
+										<span class="status-badge status-avoid">Avoid</span>
+									{:else}
+										<span class="status-badge status-blank">—</span>
+									{/if}
+								</span>
+							</button>
+						{/each}
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+
+		<div class="body-footer">
+			<button class="btn-body-close" onclick={closeBodyCustomize}>Close</button>
+			<button class="btn-body-ok" onclick={confirmBodyCustomize}>OK</button>
 		</div>
 	</div>
 {/if}
@@ -427,7 +570,7 @@
 
 	.title {
 		font-family: 'Playfair Display', serif;
-		font-size: clamp(1.8rem, 5vw, 2.8rem);
+		font-size: clamp(1.4rem, 4vw, 2rem);
 		font-weight: 600;
 		letter-spacing: 0.06em;
 		color: #c19a6b;
@@ -708,6 +851,211 @@
 		font-weight: 500;
 	}
 
+	/* Body customization modal */
+	.body-modal {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		background: #0f0f0f;
+		display: flex;
+		flex-direction: column;
+		animation: fadeIn 0.25s ease;
+	}
+
+	.body-modal > .header {
+		position: relative;
+		flex-shrink: 0;
+		background: #0f0f0f;
+		padding: 24px 24px 16px;
+	}
+
+	.body-scroll-wrapper {
+		position: relative;
+		flex: 1;
+		min-height: 0;
+	}
+
+	.body-modal-scroll {
+		flex: 1;
+		overflow-y: auto;
+		padding: 32px 24px 24px;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	.body-modal-scroll::-webkit-scrollbar {
+		display: none;
+	}
+
+	.customize-section {
+		margin-bottom: 28px;
+	}
+
+	.section-label {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #8b7355;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-bottom: 12px;
+	}
+
+	.option-row {
+		display: flex;
+		gap: 10px;
+	}
+
+	.option-btn {
+		flex: 1;
+		padding: 14px 0;
+		border-radius: 12px;
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(107,93,77,0.2);
+		color: #8b7355;
+		font-size: 0.95rem;
+		font-weight: 500;
+		font-family: inherit;
+		cursor: pointer;
+		transition: background 0.2s, border-color 0.2s, color 0.2s;
+	}
+
+	.option-btn.active {
+		background: rgba(193,154,107,0.12);
+		border-color: rgba(193,154,107,0.5);
+		color: #c19a6b;
+	}
+
+	.body-popup-desc {
+		font-size: 0.9rem;
+		color: #8b7355;
+		margin-bottom: 16px;
+	}
+
+	.body-layout {
+		display: flex;
+		gap: 20px;
+		align-items: stretch;
+	}
+
+	.body-figure {
+		flex-shrink: 0;
+		width: 120px;
+		display: flex;
+		align-items: center;
+	}
+
+	.body-figure svg {
+		width: 100%;
+		height: auto;
+	}
+
+	.body-areas {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.body-area-btn {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 14px 16px;
+		border-radius: 12px;
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(107,93,77,0.2);
+		cursor: pointer;
+		color: inherit;
+		font-family: inherit;
+		transition: background 0.2s, border-color 0.2s;
+	}
+
+	.body-area-btn.focus {
+		background: rgba(80,200,120,0.08);
+		border-color: rgba(80,200,120,0.4);
+	}
+
+	.body-area-btn.avoid {
+		background: rgba(232,84,84,0.08);
+		border-color: rgba(232,84,84,0.4);
+	}
+
+	.area-name {
+		font-size: 1rem;
+		font-weight: 500;
+		color: #e8e0d6;
+	}
+
+	.status-badge {
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		padding: 3px 12px;
+		border-radius: 20px;
+	}
+
+	.status-focus {
+		color: #50c878;
+		background: rgba(80,200,120,0.15);
+		border: 1px solid rgba(80,200,120,0.3);
+	}
+
+	.status-avoid {
+		color: #e85454;
+		background: rgba(232,84,84,0.15);
+		border: 1px solid rgba(232,84,84,0.3);
+	}
+
+	.status-blank {
+		color: #6b5d4d;
+		background: rgba(107,93,77,0.1);
+		border: 1px solid rgba(107,93,77,0.2);
+	}
+
+	.body-footer {
+		display: flex;
+		gap: 12px;
+		padding: 16px 24px 24px;
+		background: #0f0f0f;
+		flex-shrink: 0;
+	}
+
+	.btn-body-close, .btn-body-ok {
+		flex: 1;
+		padding: 14px 0;
+		border-radius: 40px;
+		font-size: 0.9rem;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		cursor: pointer;
+		font-family: inherit;
+		transition: background 0.3s, border-color 0.3s, color 0.3s;
+	}
+
+	.btn-body-close {
+		background: transparent;
+		border: 1px solid rgba(193,154,107,0.2);
+		color: #8b7355;
+	}
+
+	.btn-body-close:hover {
+		border-color: rgba(193,154,107,0.4);
+		color: #c19a6b;
+		background: rgba(193,154,107,0.06);
+	}
+
+	.btn-body-ok {
+		background: rgba(193,154,107,0.15);
+		border: 1px solid rgba(193,154,107,0.4);
+		color: #c19a6b;
+	}
+
+	.btn-body-ok:hover {
+		background: rgba(193,154,107,0.25);
+		border-color: #c19a6b;
+	}
+
 	@keyframes fadeIn {
 		from { opacity: 0; }
 		to { opacity: 1; }
@@ -775,7 +1123,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		padding: 16px 24px 20px;
+		padding: 16px 0 20px;
 		background: #0f0f0f;
 	}
 
@@ -826,14 +1174,35 @@
 		border-color: #c19a6b;
 	}
 
-	.btn-next:disabled {
-		opacity: 0.4;
-		cursor: not-allowed;
-	}
-
 	.not-found {
 		color: #8b7355;
 		font-size: 1rem;
+	}
+
+	.snackbar {
+		position: fixed;
+		bottom: 100px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 200;
+		background: rgba(232,84,84,0.9);
+		color: #fff;
+		font-size: 0.85rem;
+		font-weight: 500;
+		padding: 12px 24px;
+		border-radius: 12px;
+		white-space: nowrap;
+		animation: snackIn 0.3s ease, snackOut 0.4s ease 2.6s forwards;
+	}
+
+	@keyframes snackIn {
+		from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+		to { opacity: 1; transform: translateX(-50%) translateY(0); }
+	}
+
+	@keyframes snackOut {
+		from { opacity: 1; }
+		to { opacity: 0; }
 	}
 
 	@media (max-width: 640px) {
@@ -865,6 +1234,10 @@
 
 		.duration-card {
 			padding: 16px 10px;
+		}
+
+		.footer-actions {
+			padding: 16px 16px 20px;
 		}
 	}
 </style>
