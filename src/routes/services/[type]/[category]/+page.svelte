@@ -172,6 +172,7 @@
 	let popupService = $state<Service | null>(null);
 	let showBodyCustomize = $state(false);
 	let showInvoice = $state(false);
+	let showOrderConfirm = $state(false);
 	let pendingBodyService = $state<{ name: string; minutes: number } | null>(null);
 	let bodyPrefs = $state<Record<string, BodyPref>>(Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref])));
 	let therapistPref = $state<TherapistPref>('random');
@@ -290,11 +291,27 @@
 		popupService = null;
 	}
 
+	function closeOrderConfirm() {
+		showOrderConfirm = false;
+	}
+
+	function getExpectUrl(): string {
+		if (!category) return `/services/${serviceType}/${categoryId}/expect`;
+		const items = [...selectedServices.entries()].map(([name, sel]) => {
+			const service = category!.services.find(s => s.name === name);
+			const dur = service?.durations.find(d => d.minutes === sel.minutes);
+			return { name, minutes: sel.minutes, price: dur?.priceVND ?? 0 };
+		});
+		const params = new URLSearchParams({ services: JSON.stringify(items) });
+		return `/services/${serviceType}/${categoryId}/expect?${params}`;
+	}
+
 	function handleBackdropKeydown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
 			closePopup();
 			closeBodyCustomize();
 			closeInvoice();
+			closeOrderConfirm();
 		}
 	}
 
@@ -570,21 +587,23 @@
 									<span class="detail-label">Duration</span>
 									<span class="detail-value">{dur.label}</span>
 								</div>
-								<div class="invoice-detail-row">
-									<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-										<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-										<circle cx="12" cy="7" r="4" />
-									</svg>
-									<span class="detail-label">Therapist</span>
-									<span class="detail-value">{sel.therapist.charAt(0).toUpperCase() + sel.therapist.slice(1)}</span>
-								</div>
-								<div class="invoice-detail-row">
-									<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-										<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-									</svg>
-									<span class="detail-label">Strength</span>
-									<span class="detail-value">{sel.strength.charAt(0).toUpperCase() + sel.strength.slice(1)}</span>
-								</div>
+								{#if categoryId === 'body-massage'}
+									<div class="invoice-detail-row">
+										<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+											<circle cx="12" cy="7" r="4" />
+										</svg>
+										<span class="detail-label">Therapist</span>
+										<span class="detail-value">{sel.therapist.charAt(0).toUpperCase() + sel.therapist.slice(1)}</span>
+									</div>
+									<div class="invoice-detail-row">
+										<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+										</svg>
+										<span class="detail-label">Strength</span>
+										<span class="detail-value">{sel.strength.charAt(0).toUpperCase() + sel.strength.slice(1)}</span>
+									</div>
+								{/if}
 							</div>
 						</div>
 					{/if}
@@ -597,8 +616,55 @@
 			{@render totalCard()}
 			<div class="body-footer">
 				<button class="btn-body-close" onclick={closeInvoice}>Back</button>
-				<button class="btn-body-ok">Confirm</button>
+				<button class="btn-body-ok" onclick={() => { showInvoice = false; showOrderConfirm = true; }}>Confirm</button>
 			</div>
+		</div>
+	</div>
+{/if}
+
+{#if showOrderConfirm && category}
+	<div class="invoice-modal">
+		{@render pageHeader('Order Submitted')}
+		<div class="invoice-scroll">
+			<div class="order-confirm-list">
+				{#each [...selectedServices.entries()] as [name, sel], i}
+					{@const service = category.services.find(s => s.name === name)}
+					{@const dur = service?.durations.find(d => d.minutes === sel.minutes)}
+					{#if service && dur}
+						<div class="order-confirm-row">
+							<span class="order-confirm-num">{i + 1}.</span>
+							<span class="order-confirm-name">{service.name}</span>
+							<span class="order-confirm-price">{formatVND(dur.priceVND)}</span>
+						</div>
+					{/if}
+				{/each}
+			</div>
+
+			{@render totalCard()}
+
+			<div class="order-time-section">
+				<h3 class="order-time-title">Expected Time</h3>
+				<div class="order-time-row">
+					<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="10" />
+						<path d="M12 6v6l4 2" />
+					</svg>
+					<span class="detail-label">Start</span>
+					<span class="detail-value">2:00 PM</span>
+				</div>
+				<div class="order-time-row">
+					<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="10" />
+						<path d="M12 6v6l4 2" />
+					</svg>
+					<span class="detail-label">End</span>
+					<span class="detail-value">3:30 PM</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="invoice-footer">
+			<a href={getExpectUrl()} class="btn-body-ok order-continue-btn">Continue</a>
 		</div>
 	</div>
 {/if}
@@ -1379,6 +1445,76 @@
 		font-weight: 600;
 		color: #c19a6b;
 		text-align: right;
+	}
+
+	/* Order Confirm modal */
+	.order-confirm-list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin-bottom: 20px;
+	}
+
+	.order-confirm-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 16px;
+		border-radius: 12px;
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(193,154,107,0.12);
+	}
+
+	.order-confirm-num {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #8b7355;
+		min-width: 24px;
+	}
+
+	.order-confirm-name {
+		flex: 1;
+		font-size: 1rem;
+		font-weight: 600;
+		color: #e8e0d6;
+	}
+
+	.order-confirm-price {
+		font-size: 1rem;
+		font-weight: 600;
+		color: #c19a6b;
+		white-space: nowrap;
+	}
+
+	.order-time-section {
+		margin-top: 24px;
+	}
+
+	.order-time-title {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #8b7355;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-bottom: 12px;
+	}
+
+	.order-time-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 0;
+		border-bottom: 1px solid rgba(107,93,77,0.15);
+	}
+
+	.order-time-row:last-child {
+		border-bottom: none;
+	}
+
+	.order-continue-btn {
+		display: block;
+		text-align: center;
+		text-decoration: none;
 	}
 
 	@media (max-width: 640px) {
