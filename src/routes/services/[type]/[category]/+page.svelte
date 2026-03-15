@@ -162,9 +162,16 @@
 	type StrengthPref = 'light' | 'medium' | 'strong';
 	const bodyAreas = ['Head', 'Neck', 'Shoulder', 'Arm', 'Back', 'Thigh', 'Calf', 'Foot'] as const;
 
-	let selectedServices = $state<Map<string, number>>(new Map());
+	interface ServiceSelection {
+		minutes: number;
+		therapist: TherapistPref;
+		strength: StrengthPref;
+	}
+
+	let selectedServices = $state<Map<string, ServiceSelection>>(new Map());
 	let popupService = $state<Service | null>(null);
 	let showBodyCustomize = $state(false);
+	let showInvoice = $state(false);
 	let pendingBodyService = $state<{ name: string; minutes: number } | null>(null);
 	let bodyPrefs = $state<Record<string, BodyPref>>(Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref])));
 	let therapistPref = $state<TherapistPref>('random');
@@ -209,10 +216,10 @@
 	let totalVND = $derived(() => {
 		if (!category) return 0;
 		let sum = 0;
-		for (const [name, minutes] of selectedServices) {
+		for (const [name, sel] of selectedServices) {
 			const service = category.services.find(s => s.name === name);
 			if (service) {
-				const dur = service.durations.find(d => d.minutes === minutes);
+				const dur = service.durations.find(d => d.minutes === sel.minutes);
 				if (dur) sum += dur.priceVND;
 			}
 		}
@@ -230,13 +237,7 @@
 
 	function handleServiceTap(service: Service) {
 		dismissSnackbar();
-		if (selectedServices.has(service.name)) {
-			const next = new Map(selectedServices);
-			next.delete(service.name);
-			selectedServices = next;
-		} else {
-			popupService = service;
-		}
+		popupService = service;
 	}
 
 	function selectDuration(minutes: number) {
@@ -247,10 +248,13 @@
 			therapistPref = 'random';
 			strengthPref = 'medium';
 			showBodyCustomize = true;
-			requestAnimationFrame(() => { popupService = null; });
+			setTimeout(() => {
+				popupService = null;
+				checkBodyScroll();
+			}, 150);
 		} else {
 			const next = new Map(selectedServices);
-			next.set(popupService.name, minutes);
+			next.set(popupService.name, { minutes, therapist: 'random', strength: 'medium' });
 			selectedServices = next;
 			popupService = null;
 		}
@@ -267,7 +271,11 @@
 	function confirmBodyCustomize() {
 		if (!pendingBodyService) return;
 		const next = new Map(selectedServices);
-		next.set(pendingBodyService.name, pendingBodyService.minutes);
+		next.set(pendingBodyService.name, {
+			minutes: pendingBodyService.minutes,
+			therapist: therapistPref,
+			strength: strengthPref
+		});
 		selectedServices = next;
 		showBodyCustomize = false;
 		pendingBodyService = null;
@@ -286,6 +294,7 @@
 		if (e.key === 'Escape') {
 			closePopup();
 			closeBodyCustomize();
+			closeInvoice();
 		}
 	}
 
@@ -296,20 +305,24 @@
 			snackbarTimeout = setTimeout(() => { snackbar = ''; }, 3000);
 			return;
 		}
-		// TODO: navigate to next step
+		showInvoice = true;
+	}
+
+	function closeInvoice() {
+		showInvoice = false;
 	}
 
 	function getSelectedPrice(service: Service): number {
-		const minutes = selectedServices.get(service.name);
-		if (minutes == null) return service.durations[0].priceVND;
-		const dur = service.durations.find(d => d.minutes === minutes);
+		const sel = selectedServices.get(service.name);
+		if (!sel) return service.durations[0].priceVND;
+		const dur = service.durations.find(d => d.minutes === sel.minutes);
 		return dur ? dur.priceVND : service.durations[0].priceVND;
 	}
 
 	function getSelectedLabel(service: Service): string | null {
-		const minutes = selectedServices.get(service.name);
-		if (minutes == null) return null;
-		const dur = service.durations.find(d => d.minutes === minutes);
+		const sel = selectedServices.get(service.name);
+		if (!sel) return null;
+		const dur = service.durations.find(d => d.minutes === sel.minutes);
 		return dur ? dur.label : null;
 	}
 
@@ -335,6 +348,16 @@
 	<div class="header">
 		<h1 class="title">{text}</h1>
 		<div class="divider"></div>
+	</div>
+{/snippet}
+
+{#snippet totalCard()}
+	<div class="total-bar">
+		<span class="total-label">Total <span class="total-count">({selectedServices.size} selected)</span></span>
+		<div class="total-prices">
+			<span class="total-vnd">{formatVND(totalVND())}</span>
+			<span class="total-usd">~${totalUSD()}</span>
+		</div>
 	</div>
 {/snippet}
 
@@ -371,7 +394,7 @@
 							{/if}
 							<span class="service-price">{formatVND(getSelectedPrice(service))}</span>
 							{#if selectedServices.has(service.name)}
-								<span class="service-min">{selectedServices.get(service.name)} min</span>
+								<span class="service-min">{selectedServices.get(service.name)?.minutes} min</span>
 							{/if}
 						</div>
 					</button>
@@ -385,13 +408,7 @@
 
 		<footer class="footer-actions">
 			{#if totalVND() > 0}
-				<div class="total-bar">
-					<span class="total-label">Total <span class="total-count">({selectedServices.size} selected)</span></span>
-					<div class="total-prices">
-						<span class="total-vnd">{formatVND(totalVND())}</span>
-						<span class="total-usd">~${totalUSD()}</span>
-					</div>
-				</div>
+				{@render totalCard()}
 			{/if}
 			<div class="footer-buttons">
 				<a href="/services/{serviceType}" class="btn btn-back">
@@ -415,12 +432,6 @@
 	<div class="popup-backdrop" onclick={closePopup} onkeydown={handleBackdropKeydown}>
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div class="popup-sheet" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
-			<button class="popup-close" onclick={closePopup} aria-label="Close">
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M18 6L6 18" /><path d="M6 6l12 12" />
-				</svg>
-			</button>
-
 			<div class="popup-header">
 				<h2 class="popup-title">{popupService.name}</h2>
 				<p class="popup-desc">{popupService.description}</p>
@@ -434,6 +445,10 @@
 						<span class="dur-usd">~${(dur.priceVND / VND_TO_USD).toFixed(2)}</span>
 					</button>
 				{/each}
+			</div>
+
+			<div class="popup-footer">
+				<button class="btn-body-close" onclick={closePopup}>Close</button>
 			</div>
 		</div>
 	</div>
@@ -527,6 +542,63 @@
 		<div class="body-footer">
 			<button class="btn-body-close" onclick={closeBodyCustomize}>Close</button>
 			<button class="btn-body-ok" onclick={confirmBodyCustomize}>OK</button>
+		</div>
+	</div>
+{/if}
+
+{#if showInvoice && category}
+	<div class="invoice-modal">
+		{@render pageHeader('Invoice')}
+		<div class="invoice-scroll">
+			<div class="invoice-list">
+				{#each [...selectedServices.entries()] as [name, sel], i}
+					{@const service = category.services.find(s => s.name === name)}
+					{@const dur = service?.durations.find(d => d.minutes === sel.minutes)}
+					{#if service && dur}
+						<div class="invoice-item">
+							<div class="invoice-item-head">
+								<span class="invoice-num">{i + 1}.</span>
+								<span class="invoice-name">{service.name}</span>
+								<span class="invoice-price">{formatVND(dur.priceVND)}</span>
+							</div>
+							<div class="invoice-item-details">
+								<div class="invoice-detail-row">
+									<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+										<circle cx="12" cy="12" r="10" />
+										<path d="M12 6v6l4 2" />
+									</svg>
+									<span class="detail-label">Duration</span>
+									<span class="detail-value">{dur.label}</span>
+								</div>
+								<div class="invoice-detail-row">
+									<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+										<circle cx="12" cy="7" r="4" />
+									</svg>
+									<span class="detail-label">Therapist</span>
+									<span class="detail-value">{sel.therapist.charAt(0).toUpperCase() + sel.therapist.slice(1)}</span>
+								</div>
+								<div class="invoice-detail-row">
+									<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+									</svg>
+									<span class="detail-label">Strength</span>
+									<span class="detail-value">{sel.strength.charAt(0).toUpperCase() + sel.strength.slice(1)}</span>
+								</div>
+							</div>
+						</div>
+					{/if}
+				{/each}
+			</div>
+
+		</div>
+
+		<div class="invoice-footer">
+			{@render totalCard()}
+			<div class="body-footer">
+				<button class="btn-body-close" onclick={closeInvoice}>Back</button>
+				<button class="btn-body-ok">Confirm</button>
+			</div>
 		</div>
 	</div>
 {/if}
@@ -759,26 +831,10 @@
 		animation: slideUp 0.3s ease;
 	}
 
-	.popup-close {
-		position: absolute;
-		top: 16px;
-		right: 16px;
-		background: rgba(255,255,255,0.08);
-		border: none;
-		border-radius: 50%;
-		width: 36px;
-		height: 36px;
+	.popup-footer {
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		color: #8b7355;
-		transition: background 0.2s, color 0.2s;
-	}
-
-	.popup-close:hover {
-		background: rgba(255,255,255,0.14);
-		color: #c19a6b;
+		gap: 12px;
+		padding: 16px 0 0;
 	}
 
 	.popup-header {
@@ -876,9 +932,9 @@
 	}
 
 	.body-modal-scroll {
-		flex: 1;
+		height: 100%;
 		overflow-y: auto;
-		padding: 32px 24px 24px;
+		padding: 8px 24px 24px;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
 	}
@@ -1010,6 +1066,19 @@
 		color: #6b5d4d;
 		background: rgba(107,93,77,0.1);
 		border: 1px solid rgba(107,93,77,0.2);
+	}
+
+	.invoice-footer {
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 16px 24px 24px;
+		background: #0f0f0f;
+	}
+
+	.invoice-footer .body-footer {
+		padding: 0;
 	}
 
 	.body-footer {
@@ -1203,6 +1272,113 @@
 	@keyframes snackOut {
 		from { opacity: 1; }
 		to { opacity: 0; }
+	}
+
+	/* Invoice modal */
+	.invoice-modal {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		background: #0f0f0f;
+		display: flex;
+		flex-direction: column;
+		animation: fadeIn 0.25s ease;
+	}
+
+	.invoice-modal > .header {
+		position: relative;
+		flex-shrink: 0;
+		background: #0f0f0f;
+		padding: 24px 24px 16px;
+	}
+
+	.invoice-scroll {
+		flex: 1;
+		overflow-y: auto;
+		padding: 8px 24px 24px;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	.invoice-scroll::-webkit-scrollbar {
+		display: none;
+	}
+
+	.invoice-list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin-bottom: 24px;
+	}
+
+	.invoice-item {
+		padding: 16px;
+		border-radius: 14px;
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(193,154,107,0.12);
+	}
+
+	.invoice-item-head {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 8px;
+	}
+
+	.invoice-num {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #8b7355;
+		min-width: 24px;
+	}
+
+	.invoice-name {
+		flex: 1;
+		font-size: 1rem;
+		font-weight: 600;
+		color: #e8e0d6;
+	}
+
+	.invoice-price {
+		font-size: 1rem;
+		font-weight: 600;
+		color: #c19a6b;
+		white-space: nowrap;
+	}
+
+	.invoice-item-details {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding-left: 32px;
+		margin-top: 4px;
+	}
+
+	.invoice-detail-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.detail-icon {
+		width: 16px;
+		height: 16px;
+		color: #8b7355;
+		flex-shrink: 0;
+	}
+
+	.detail-label {
+		font-size: 0.8rem;
+		font-weight: 400;
+		color: #6b5d4d;
+		flex: 1;
+	}
+
+	.detail-value {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #c19a6b;
+		text-align: right;
 	}
 
 	@media (max-width: 640px) {

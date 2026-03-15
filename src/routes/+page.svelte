@@ -35,7 +35,7 @@
 			<div class="logo-mark">
 				<img src="/logo.png" alt="Ngan Ha Spa Logo" />
 			</div>
-			<h1 class="salon-name">Ngan Ha Spa</h1>
+			<h1 class="salon-name">Ngan Ha</h1>
 			<h2 class="mission-text">Let Us Understand You</h2>
 			<div class="divider"></div>
 		</div>
@@ -149,10 +149,10 @@
 	}
 
 	.salon-name {
-		font-family: 'Playfair Display', serif;
+		font-family: 'Imperial Script', cursive;
 		font-size: clamp(2.4rem, 6vw, 3.8rem);
-		font-weight: 600;
-		letter-spacing: 0.08em;
+		font-weight: 700;
+		letter-spacing: 0.04em;
 		color: #c19a6b;
 		text-align: center;
 		margin-top: -28px;
@@ -171,6 +171,7 @@
 		font-weight: 400;
 		color: #e8e0d6;
 		letter-spacing: 0.02em;
+		margin-top: -10px;
 	}
 
 	/* Flags Orbit */
