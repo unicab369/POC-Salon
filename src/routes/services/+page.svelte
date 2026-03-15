@@ -50,8 +50,8 @@
 		</div>
 
 		<div class="services-grid">
-			{#each services as service, i}
-				<a class="service-card" href={service.href} style="--float-delay:{i * 1.5}s">
+			{#each services as service}
+				<a class="service-card" href={service.href}>
 					<div class="service-icon">
 						{#if service.id === 'standard'}
 							<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -117,8 +117,8 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 120px 24px 120px;
-		gap: 40px;
+		padding: 24px;
+		gap: 24px;
 		opacity: 0;
 		transition: opacity 1.2s ease;
 		overflow: hidden;
@@ -130,19 +130,23 @@
 
 	.back-link {
 		position: fixed;
-		bottom: 32px;
+		bottom: 0;
 		left: 50%;
 		transform: translateX(-50%);
+		width: calc(100% - 48px);
+		max-width: 480px;
 		z-index: 10;
-		display: inline-flex;
+		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 8px;
 		color: #8b7355;
 		text-decoration: none;
 		font-size: 0.85rem;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		padding: 12px 32px;
+		padding: 14px 24px;
+		margin-bottom: 20px;
 		border: 1px solid rgba(193,154,107,0.2);
 		border-radius: 40px;
 		transition: color 0.3s, border-color 0.3s, background 0.3s;
@@ -179,12 +183,12 @@
 	.divider {
 		height: 1px;
 		background: linear-gradient(90deg, transparent, #c19a6b, transparent);
-		animation: divider-breathe 6s ease-in-out infinite;
+		animation: divider-breathe 16s ease-in-out infinite;
 	}
 
 	@keyframes divider-breathe {
-		0%, 100% { width: 120px; }
-		50% { width: 240px; }
+		0%, 100% { width: 150px; }
+		50% { width: 200px; }
 	}
 
 	.services-grid {
@@ -195,6 +199,12 @@
 		justify-content: center;
 		gap: 28px;
 		max-width: 800px;
+		animation: grid-float 16s ease-in-out infinite;
+	}
+
+	@keyframes grid-float {
+		0%, 100% { transform: translateY(0); }
+		50% { transform: translateY(-10px); }
 	}
 
 	.service-card {
@@ -211,14 +221,7 @@
 		text-decoration: none;
 		color: inherit;
 		cursor: pointer;
-		animation: card-float 5s ease-in-out infinite;
-		animation-delay: var(--float-delay, 0s);
 		transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
-	}
-
-	@keyframes card-float {
-		0%, 100% { transform: translateY(0); }
-		50% { transform: translateY(-12px); }
 	}
 
 	.service-card:hover {
@@ -261,8 +264,8 @@
 
 	@media (max-width: 640px) {
 		.page {
-			padding: 100px 16px 120px;
-			gap: 32px;
+			padding: 16px;
+			gap: 20px;
 		}
 
 		.services-grid {

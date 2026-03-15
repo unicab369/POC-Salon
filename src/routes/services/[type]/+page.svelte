@@ -42,8 +42,8 @@
 		</div>
 
 		<div class="categories-grid">
-			{#each categories as cat, i}
-				<a class="cat-card" href="/services/{serviceType}/{cat.id}" style="--float-delay:{i * 0.6}s">
+			{#each categories as cat}
+				<a class="cat-card" href="/services/{serviceType}/{cat.id}">
 					<div class="cat-icon">
 						{#if cat.id === 'body-massage'}
 							<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -214,12 +214,12 @@
 	.divider {
 		height: 1px;
 		background: linear-gradient(90deg, transparent, #c19a6b, transparent);
-		animation: divider-breathe 6s ease-in-out infinite;
+		animation: divider-breathe 16s ease-in-out infinite;
 	}
 
 	@keyframes divider-breathe {
-		0%, 100% { width: 120px; }
-		50% { width: 240px; }
+		0%, 100% { width: 150px; }
+		50% { width: 200px; }
 	}
 
 	.categories-grid {
@@ -230,6 +230,12 @@
 		gap: 16px;
 		max-width: 360px;
 		width: 100%;
+		animation: grid-float 16s ease-in-out infinite;
+	}
+
+	@keyframes grid-float {
+		0%, 100% { transform: translateY(0); }
+		50% { transform: translateY(-10px); }
 	}
 
 	.cat-card {
@@ -275,19 +281,23 @@
 
 	.back-link {
 		position: fixed;
-		bottom: 32px;
+		bottom: 0;
 		left: 50%;
 		transform: translateX(-50%);
+		width: calc(100% - 48px);
+		max-width: 480px;
 		z-index: 10;
-		display: inline-flex;
+		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 8px;
 		color: #8b7355;
 		text-decoration: none;
 		font-size: 0.85rem;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		padding: 12px 32px;
+		padding: 14px 24px;
+		margin-bottom: 20px;
 		border: 1px solid rgba(193,154,107,0.2);
 		border-radius: 40px;
 		transition: color 0.3s, border-color 0.3s, background 0.3s;
