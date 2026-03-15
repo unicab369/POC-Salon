@@ -211,13 +211,14 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 16px;
-		padding: 40px 32px 32px;
+		justify-content: center;
+		gap: clamp(8px, 1.5vh, 16px);
+		padding: clamp(12px, 2vh, 24px) 32px;
 		width: 220px;
+		height: 20vh;
 		border-radius: 24px;
 		background: rgba(255,255,255,0.03);
 		border: 1px solid rgba(193,154,107,0.15);
-		backdrop-filter: blur(10px);
 		text-decoration: none;
 		color: inherit;
 		cursor: pointer;
@@ -231,13 +232,14 @@
 	}
 
 	.service-icon {
-		width: 56px;
-		height: 56px;
+		width: clamp(36px, 5vh, 56px);
+		height: clamp(36px, 5vh, 56px);
 		color: #c19a6b;
-		padding: 10px;
+		padding: clamp(6px, 1vh, 10px);
 		border-radius: 50%;
 		background: rgba(193,154,107,0.08);
 		border: 1px solid rgba(193,154,107,0.15);
+		flex-shrink: 0;
 	}
 
 	.service-icon svg {
@@ -247,19 +249,19 @@
 
 	.service-title {
 		font-family: 'Playfair Display', serif;
-		font-size: 1.6rem;
+		font-size: clamp(1rem, 2vh, 1.6rem);
 		font-weight: 600;
 		color: #e8e0d6;
 		letter-spacing: 0.04em;
 	}
 
 	.service-desc {
-		font-size: 0.9rem;
+		font-size: clamp(0.7rem, 1.5vh, 0.9rem);
 		color: #8b7355;
 		text-align: center;
 		letter-spacing: 0.04em;
 		font-weight: 300;
-		line-height: 1.5;
+		line-height: 1.4;
 	}
 
 	@media (max-width: 640px) {

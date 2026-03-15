@@ -133,12 +133,14 @@
 		width: 240px;
 		height: 240px;
 		animation: breathe 6s ease-in-out infinite;
+		filter: drop-shadow(0 0 20px rgba(193,154,107,0.4)) drop-shadow(0 0 50px rgba(193,154,107,0.2));
 	}
 
 	.logo-mark img {
 		width: 100%;
 		height: 100%;
 		object-fit: contain;
+		filter: sepia(0.6) saturate(1.5) brightness(1.1) hue-rotate(-10deg);
 	}
 
 	@keyframes breathe {

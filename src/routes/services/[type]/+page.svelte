@@ -5,18 +5,19 @@
 	interface Category {
 		name: string;
 		id: string;
+		min: number;
 	}
 
 	const categories: Category[] = [
-		{ name: 'Body Massage', id: 'body-massage' },
-		{ name: 'Foot Massage', id: 'foot-massage' },
-		{ name: 'Hair Wash', id: 'hair-wash' },
-		{ name: 'Facial', id: 'facial' },
-		{ name: 'Heel Care', id: 'heel-care' },
-		{ name: 'Nails', id: 'nails' },
-		{ name: 'Ear Clean', id: 'ear-clean' },
-		{ name: 'Barber', id: 'barber' },
-		{ name: 'VIP Pack', id: 'vip-pack' }
+		{ name: 'Body Massage', id: 'body-massage', min: 60 },
+		{ name: 'Foot Massage', id: 'foot-massage', min: 45 },
+		{ name: 'Hair Wash', id: 'hair-wash', min: 30 },
+		{ name: 'Facial', id: 'facial', min: 45 },
+		{ name: 'Heel Care', id: 'heel-care', min: 30 },
+		{ name: 'Nails', id: 'nails', min: 40 },
+		{ name: 'Ear Clean', id: 'ear-clean', min: 20 },
+		{ name: 'Barber', id: 'barber', min: 30 },
+		{ name: 'VIP Pack', id: 'vip-pack', min: 120 }
 	];
 
 	let visible = $state(false);
@@ -242,12 +243,11 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 10px;
-		padding: 20px 12px 16px;
+		gap: 6px;
+		padding: 10px 12px 8px;
 		border-radius: 16px;
 		background: rgba(255,255,255,0.03);
 		border: 1px solid rgba(193,154,107,0.12);
-		backdrop-filter: blur(10px);
 		cursor: pointer;
 		color: inherit;
 		text-decoration: none;
@@ -260,8 +260,8 @@
 	}
 
 	.cat-icon {
-		width: 48px;
-		height: 48px;
+		width: 36px;
+		height: 36px;
 		color: #c19a6b;
 	}
 
@@ -271,12 +271,34 @@
 	}
 
 	.cat-name {
-		font-size: 1.2rem;
+		font-size: 0.95rem;
 		color: #e8e0d6;
 		font-weight: 600;
 		letter-spacing: 0.02em;
 		text-align: center;
 		line-height: 1.3;
+	}
+
+
+	main::before,
+	main::after {
+		content: '';
+		position: fixed;
+		left: 0;
+		width: 100%;
+		height: 80px;
+		pointer-events: none;
+		z-index: 5;
+	}
+
+	main::before {
+		top: 0;
+		background: linear-gradient(to bottom, #0f0f0f 0%, transparent 100%);
+	}
+
+	main::after {
+		bottom: 0;
+		background: linear-gradient(to top, #0f0f0f 0%, transparent 100%);
 	}
 
 	.back-link {
