@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { ordersByCategory, type ServiceSelection, type DurationOption } from '$lib/orderStore';
+	import { base } from '$app/paths';
 	import { t } from '$lib/i18n';
 
 	interface Category {
@@ -160,10 +161,10 @@
 	function getInvoiceUrl(orders: Record<string, Map<string, ServiceSelection>>): string {
 		for (const cat of categories) {
 			if ((orders[cat.id]?.size ?? 0) > 0) {
-				return `/services/${serviceType}/${cat.id}?invoice`;
+				return `${base}/services/${serviceType}/${cat.id}?invoice`;
 			}
 		}
-		return `/services/${serviceType}`;
+		return `${base}/services/${serviceType}`;
 	}
 
 	onMount(() => {
@@ -186,7 +187,7 @@
 
 		<div class="categories-grid">
 			{#each categories as cat}
-				<a class="cat-card" href="/services/{serviceType}/{cat.id}">
+				<a class="cat-card" href="{base}/services/{serviceType}/{cat.id}">
 					<div class="cat-icon">
 						{#if cat.id === 'body-massage'}
 							<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -298,7 +299,7 @@
 					</div>
 				</a>
 			{/if}
-			<a href="/services" class="back-link">
+			<a href="{base}/services" class="back-link">
 				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 					<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
 				</svg>

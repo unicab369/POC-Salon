@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { t, setLocale, type Locale } from '$lib/i18n';
 
 	interface FlagItem {
@@ -27,7 +28,7 @@
 
 	function selectLanguage(flag: FlagItem) {
 		setLocale(flagLocaleMap[flag.language] ?? 'en');
-		goto('/services');
+		goto(`${base}/services`);
 	}
 
 	let visible = $state(false);
@@ -48,7 +49,7 @@
 		<!-- Logo -->
 		<div class="logo-section">
 			<div class="logo-mark">
-				<img src="/logo.png" alt="Ngan Ha Spa Logo" />
+				<img src="{base}/logo.png" alt="Ngan Ha Spa Logo" />
 			</div>
 			<h1 class="salon-name">Ngan Ha</h1>
 			<h2 class="mission-text">{$t('home.tagline')}</h2>
@@ -174,8 +175,15 @@
 	.divider {
 		width: 180px;
 		height: 1px;
-		background: linear-gradient(90deg, transparent, #c19a6b, transparent);
+		background: linear-gradient(90deg, transparent 0%, transparent 30%, #c19a6b 50%, transparent 70%, transparent 100%);
+		background-size: 300% 100%;
+		animation: shimmer 4s ease-in-out infinite;
 		margin-top: 10px;
+	}
+
+	@keyframes shimmer {
+		0% { background-position: 100% 0; }
+		100% { background-position: -100% 0; }
 	}
 
 	.mission-text {

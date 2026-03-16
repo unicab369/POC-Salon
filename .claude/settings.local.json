@@ -8,7 +8,12 @@
       "mcp__ide__getDiagnostics",
       "Bash(npx svelte-check:*)",
       "Bash(xargs:*)",
-      "Bash(npx vite build:*)"
+      "Bash(npx vite build:*)",
+      "Bash(gh api:*)",
+      "Bash(brew list:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth status:*)",
+      "Bash(npm install:*)"
     ]
   }
 }

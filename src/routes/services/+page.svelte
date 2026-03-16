@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import { t } from '$lib/i18n';
 
 	interface ServiceItem {
@@ -14,19 +15,19 @@
 			title: $t('services.standard'),
 			description: $t('services.standard.desc'),
 			id: 'standard',
-			href: '/services/standard'
+			href: `${base}/services/standard`
 		},
 		{
 			title: $t('services.premium'),
 			description: $t('services.premium.desc'),
 			id: 'premium',
-			href: '/services/premium'
+			href: `${base}/services/premium`
 		},
 		{
 			title: $t('services.homespa'),
 			description: $t('services.homespa.desc'),
 			id: 'homespa',
-			href: '/services/homespa'
+			href: `${base}/services/homespa`
 		}
 	]);
 
@@ -79,7 +80,7 @@
 			{/each}
 		</div>
 
-		<a href="/" class="back-link">
+		<a href="{base}/" class="back-link">
 			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 				<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
 			</svg>

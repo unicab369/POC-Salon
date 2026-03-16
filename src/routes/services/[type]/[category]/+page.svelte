@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { ordersByCategory, setCategoryOrders, getOrCreateCategoryOrders, type ServiceSelection as StoreServiceSelection } from '$lib/orderStore';
+	import { base } from '$app/paths';
 	import { t } from '$lib/i18n';
 
 	interface DurationOption {
@@ -377,7 +378,7 @@
 			category: i.categoryName
 		}));
 		const params = new URLSearchParams({ services: JSON.stringify(items) });
-		return `/services/${serviceType}/${categoryId}/expect?${params}`;
+		return `${base}/services/${serviceType}/${categoryId}/expect?${params}`;
 	}
 
 	function handleBackdropKeydown(e: KeyboardEvent) {
@@ -538,7 +539,7 @@
 				</div>
 			{/if}
 			<div class="footer-buttons">
-				<a href="/services/{serviceType}" class="btn btn-back">
+				<a href="{base}/services/{serviceType}" class="btn btn-back">
 					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 						<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
 					</svg>
@@ -897,12 +898,10 @@
 					<span class="detail-label">{customerContactType === 'phone' ? 'Phone' : 'Email'}</span>
 					<span class="detail-value">{customerContact}</span>
 				</div>
-				{#if selectedPaymentMethod}
-					<div class="order-confirm-row">
-						<span class="detail-label">Payment</span>
-						<span class="detail-value">{selectedPaymentMethod}</span>
-					</div>
-				{/if}
+				<div class="order-confirm-row">
+					<span class="detail-label">Payment</span>
+					<span class="detail-value">{selectedPaymentMethod || '—'}</span>
+				</div>
 			</div>
 
 			{#each [...allOrders().byCategory.entries()] as [catName, catItems]}
