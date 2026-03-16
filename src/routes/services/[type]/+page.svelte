@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { ordersByCategory, type ServiceSelection, type DurationOption } from '$lib/orderStore';
+	import { t } from '$lib/i18n';
 
 	interface Category {
 		name: string;
@@ -9,17 +10,17 @@
 		min: number;
 	}
 
-	const categories: Category[] = [
-		{ name: 'Body Massage', id: 'body-massage', min: 60 },
-		{ name: 'Foot Massage', id: 'foot-massage', min: 45 },
-		{ name: 'Hair Wash', id: 'hair-wash', min: 30 },
-		{ name: 'Facial', id: 'facial', min: 45 },
-		{ name: 'Heel Care', id: 'heel-care', min: 30 },
-		{ name: 'Nails', id: 'nails', min: 40 },
-		{ name: 'Ear Clean', id: 'ear-clean', min: 20 },
-		{ name: 'Barber', id: 'barber', min: 30 },
-		{ name: 'VIP Pack', id: 'vip-pack', min: 120 }
-	];
+	let categories = $derived<Category[]>([
+		{ name: $t('category.body-massage'), id: 'body-massage', min: 60 },
+		{ name: $t('category.foot-massage'), id: 'foot-massage', min: 45 },
+		{ name: $t('category.hair-wash'), id: 'hair-wash', min: 30 },
+		{ name: $t('category.facial'), id: 'facial', min: 45 },
+		{ name: $t('category.heel-care'), id: 'heel-care', min: 30 },
+		{ name: $t('category.nails'), id: 'nails', min: 40 },
+		{ name: $t('category.ear-clean'), id: 'ear-clean', min: 20 },
+		{ name: $t('category.barber'), id: 'barber', min: 30 },
+		{ name: $t('category.vip-pack'), id: 'vip-pack', min: 120 }
+	]);
 
 	function buildDurations(basePrice: number): DurationOption[] {
 		const round = (n: number) => Math.round(n / 10000) * 10000;
@@ -156,6 +157,15 @@
 		return orders[catId]?.size ?? 0;
 	}
 
+	function getInvoiceUrl(orders: Record<string, Map<string, ServiceSelection>>): string {
+		for (const cat of categories) {
+			if ((orders[cat.id]?.size ?? 0) > 0) {
+				return `/services/${serviceType}/${cat.id}?invoice`;
+			}
+		}
+		return `/services/${serviceType}`;
+	}
+
 	onMount(() => {
 		setTimeout(() => {
 			visible = true;
@@ -170,7 +180,7 @@
 <main>
 	<div class="page" class:visible>
 		<div class="header">
-			<h1 class="title">Select Category</h1>
+			<h1 class="title">{$t('category.title')}</h1>
 			<div class="divider"></div>
 		</div>
 
@@ -280,19 +290,19 @@
 		<footer class="footer-actions">
 			{#if computeTotal($ordersByCategory).totalVND > 0}
 				{@const totals = computeTotal($ordersByCategory)}
-				<div class="total-bar">
-					<span class="total-label">Total <span class="total-count">({totals.totalCount} selected)</span></span>
+				<a href={getInvoiceUrl($ordersByCategory)} class="total-bar">
+					<span class="total-label">{$t('category.total')} <span class="total-count">({totals.totalCount} {$t('category.selected')})</span></span>
 					<div class="total-prices">
 						<span class="total-vnd">{formatVND(totals.totalVND)}</span>
 						<span class="total-usd">~${(totals.totalVND / VND_TO_USD).toFixed(2)}</span>
 					</div>
-				</div>
+				</a>
 			{/if}
 			<a href="/services" class="back-link">
 				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 					<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
 				</svg>
-				Experience
+				{$t('category.back')}
 			</a>
 		</footer>
 	</div>
@@ -495,6 +505,9 @@
 		border: 1px solid rgba(80,170,120,0.5);
 		box-shadow: 0 4px 24px rgba(80,170,120,0.15);
 		width: 100%;
+		text-decoration: none;
+		color: inherit;
+		cursor: pointer;
 	}
 
 	.total-label {

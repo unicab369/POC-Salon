@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { ordersByCategory, setCategoryOrders, getOrCreateCategoryOrders, type ServiceSelection as StoreServiceSelection } from '$lib/orderStore';
+	import { t } from '$lib/i18n';
 
 	interface DurationOption {
 		minutes: number;
@@ -167,12 +168,19 @@
 	let popupService = $state<Service | null>(null);
 	let showBodyCustomize = $state(false);
 	let showInvoice = $state(false);
+	let showPayment = $state(false);
 	let showOrderConfirm = $state(false);
+	let selectedPaymentMethod = $state('');
 	let pendingBodyService = $state<{ name: string; minutes: number } | null>(null);
 	let bodyPrefs = $state<Record<string, BodyPref>>(Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref])));
 	let therapistPref = $state<TherapistPref>('random');
 	let strengthPref = $state<StrengthPref>('medium');
 	let noteText = $state('');
+	let customerFirstName = $state('');
+	let customerLastName = $state('');
+	let customerContactType = $state<'phone' | 'email'>('phone');
+	let customerContact = $state('');
+	let customerGender = $state<'male' | 'female'>('male');
 	let snackbar = $state('');
 	let snackbarTimeout: ReturnType<typeof setTimeout>;
 
@@ -189,6 +197,11 @@
 	let bodyCanScrollDown = $state(false);
 	let bodyScrollEl = $state<HTMLElement | null>(null);
 	let bodyMask = $state('');
+
+	let invoiceCanScrollUp = $state(false);
+	let invoiceCanScrollDown = $state(false);
+	let invoiceScrollEl = $state<HTMLElement | null>(null);
+	let invoiceMask = $state('');
 
 	function buildMask(el: HTMLElement): { up: boolean; down: boolean; mask: string } {
 		const up = el.scrollTop > 10;
@@ -212,6 +225,14 @@
 		bodyCanScrollUp = r.up;
 		bodyCanScrollDown = r.down;
 		bodyMask = r.mask;
+	}
+
+	function checkInvoiceScroll() {
+		if (!invoiceScrollEl) return;
+		const r = buildMask(invoiceScrollEl);
+		invoiceCanScrollUp = r.up;
+		invoiceCanScrollDown = r.down;
+		invoiceMask = r.mask;
 	}
 
 	let totalVND = $derived(() => {
@@ -258,7 +279,7 @@
 				const dur = service.durations.find(d => d.minutes === sel.minutes);
 				if (!dur) continue;
 				const item: AllOrderItem = {
-					categoryName: cat.name,
+					categoryName: $t('category.' + cat.id),
 					categoryId: cat.id,
 					serviceName: name,
 					minutes: sel.minutes,
@@ -271,7 +292,7 @@
 				catItems.push(item);
 			}
 			if (catItems.length > 0) {
-				byCategory.set(cat.name, catItems);
+				byCategory.set($t('category.' + cat.id), catItems);
 			}
 		}
 
@@ -364,22 +385,51 @@
 			closePopup();
 			closeBodyCustomize();
 			closeInvoice();
+			closePayment();
 			closeOrderConfirm();
 		}
 	}
 
 	function handleNext() {
-		if (selectedServices.size === 0) {
+		if (globalTotalCount() === 0) {
 			clearTimeout(snackbarTimeout);
-			snackbar = 'Please add at least one service';
+			snackbar = $t('detail.snackbar');
 			snackbarTimeout = setTimeout(() => { snackbar = ''; }, 3000);
 			return;
 		}
 		showInvoice = true;
+		setTimeout(() => checkInvoiceScroll(), 50);
 	}
 
 	function closeInvoice() {
 		showInvoice = false;
+	}
+
+	function handleConfirmOrder() {
+		if (!customerFirstName.trim() || !customerLastName.trim()) {
+			clearTimeout(snackbarTimeout);
+			snackbar = 'Please enter your first and last name';
+			snackbarTimeout = setTimeout(() => { snackbar = ''; }, 3000);
+			return;
+		}
+		if (!customerContact.trim()) {
+			clearTimeout(snackbarTimeout);
+			snackbar = customerContactType === 'email' ? 'Please enter your email' : 'Please enter your phone number';
+			snackbarTimeout = setTimeout(() => { snackbar = ''; }, 3000);
+			return;
+		}
+		showPayment = true;
+	}
+
+	function selectPayment(method: string) {
+		selectedPaymentMethod = method;
+		showPayment = false;
+		showOrderConfirm = true;
+		setTimeout(() => { showInvoice = false; }, 300);
+	}
+
+	function closePayment() {
+		showPayment = false;
 	}
 
 	function getSelectedPrice(service: Service): number {
@@ -404,6 +454,10 @@
 		setTimeout(() => {
 			visible = true;
 			checkScroll();
+			if ($page.url.searchParams.has('invoice')) {
+				showInvoice = true;
+				setTimeout(() => checkInvoiceScroll(), 50);
+			}
 		}, 100);
 	});
 </script>
@@ -423,7 +477,7 @@
 
 {#snippet totalCard()}
 	<div class="total-bar">
-		<span class="total-label">Total <span class="total-count">({globalTotalCount()} selected)</span></span>
+		<span class="total-label">{$t('order.total')} <span class="total-count">({globalTotalCount()} {$t('order.selected')})</span></span>
 		<div class="total-prices">
 			<span class="total-vnd">{formatVND(globalTotalVND())}</span>
 			<span class="total-usd">~${(globalTotalVND() / VND_TO_USD).toFixed(2)}</span>
@@ -433,7 +487,7 @@
 
 <main>
 	<div class="page" class:visible>
-		{@render pageHeader(category?.name ?? 'Services')}
+		{@render pageHeader($t('category.' + categoryId))}
 
 		{#if category}
 			<div class="service-list-wrapper">
@@ -447,7 +501,7 @@
 						<path d="M6 9l6 6 6-6" />
 					</svg>
 				</div>
-			<div class="service-list" bind:this={listEl} onscroll={checkScroll} style="-webkit-mask-image: {listMask}; mask-image: {listMask}">
+			<div class="service-list" bind:this={listEl} onscroll={checkScroll} style={listMask ? `-webkit-mask-image: ${listMask}; mask-image: ${listMask}` : ''}>
 				{#each category.services as service}
 					<button
 						class="service-item"
@@ -460,7 +514,7 @@
 						</div>
 						<div class="service-end">
 							{#if service.bestSeller}
-								<span class="best-seller">Best Seller</span>
+								<span class="best-seller">{$t('detail.bestseller')}</span>
 							{/if}
 							<span class="service-price">{formatVND(getSelectedPrice(service))}</span>
 							{#if selectedServices.has(service.name)}
@@ -473,21 +527,24 @@
 			</div>
 
 		{:else}
-			<p class="not-found">Category not found.</p>
+			<p class="not-found">{$t('detail.notfound')}</p>
 		{/if}
 
 		<footer class="footer-actions">
 			{#if globalTotalVND() > 0}
-				{@render totalCard()}
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<div class="total-bar-tap" onclick={handleNext} onkeydown={(e) => { if (e.key === 'Enter') handleNext(); }}>
+					{@render totalCard()}
+				</div>
 			{/if}
 			<div class="footer-buttons">
 				<a href="/services/{serviceType}" class="btn btn-back">
 					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 						<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
 					</svg>
-					Back
+					{$t('detail.back')}
 				</a>
-				<button class="btn btn-next" onclick={handleNext}>Next</button>
+				<button class="btn btn-next" onclick={handleNext}>{$t('detail.next')}</button>
 			</div>
 		</footer>
 	</div>
@@ -518,7 +575,7 @@
 			</div>
 
 			<div class="popup-footer">
-				<button class="btn-body-close" onclick={closePopup}>Close</button>
+				<button class="btn-body-close" onclick={closePopup}>{$t('detail.close')}</button>
 			</div>
 		</div>
 	</div>
@@ -526,7 +583,7 @@
 
 {#if showBodyCustomize}
 	<div class="body-modal">
-		{@render pageHeader('Customize Your Massage')}
+		{@render pageHeader($t('customize.title'))}
 		<div class="body-scroll-wrapper">
 			<div class="scroll-hint scroll-hint-up" class:visible={bodyCanScrollUp}>
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -538,28 +595,28 @@
 					<path d="M6 9l6 6 6-6" />
 				</svg>
 			</div>
-		<div class="body-modal-scroll" bind:this={bodyScrollEl} onscroll={checkBodyScroll} style="-webkit-mask-image: {bodyMask}; mask-image: {bodyMask}">
+		<div class="body-modal-scroll" bind:this={bodyScrollEl} onscroll={checkBodyScroll} style={bodyMask ? `-webkit-mask-image: ${bodyMask}; mask-image: ${bodyMask}` : ''}>
 			<div class="customize-section">
-				<h3 class="section-label">Therapist</h3>
+				<h3 class="section-label">{$t('customize.therapist')}</h3>
 				<div class="option-row">
-					<button class="option-btn" class:active={therapistPref === 'random'} onclick={() => therapistPref = 'random'}>Random</button>
-					<button class="option-btn" class:active={therapistPref === 'male'} onclick={() => therapistPref = 'male'}>Male</button>
-					<button class="option-btn" class:active={therapistPref === 'female'} onclick={() => therapistPref = 'female'}>Female</button>
+					<button class="option-btn" class:active={therapistPref === 'random'} onclick={() => therapistPref = 'random'}>{$t('customize.random')}</button>
+					<button class="option-btn" class:active={therapistPref === 'male'} onclick={() => therapistPref = 'male'}>{$t('customize.male')}</button>
+					<button class="option-btn" class:active={therapistPref === 'female'} onclick={() => therapistPref = 'female'}>{$t('customize.female')}</button>
 				</div>
 			</div>
 
 			<div class="customize-section">
-				<h3 class="section-label">Strength</h3>
+				<h3 class="section-label">{$t('customize.strength')}</h3>
 				<div class="option-row">
-					<button class="option-btn" class:active={strengthPref === 'light'} onclick={() => strengthPref = 'light'}>Light</button>
-					<button class="option-btn" class:active={strengthPref === 'medium'} onclick={() => strengthPref = 'medium'}>Medium</button>
-					<button class="option-btn" class:active={strengthPref === 'strong'} onclick={() => strengthPref = 'strong'}>Strong</button>
+					<button class="option-btn" class:active={strengthPref === 'light'} onclick={() => strengthPref = 'light'}>{$t('customize.light')}</button>
+					<button class="option-btn" class:active={strengthPref === 'medium'} onclick={() => strengthPref = 'medium'}>{$t('customize.medium')}</button>
+					<button class="option-btn" class:active={strengthPref === 'strong'} onclick={() => strengthPref = 'strong'}>{$t('customize.strong')}</button>
 				</div>
 			</div>
 
 			<div class="customize-section">
-				<h3 class="section-label">Focus Areas</h3>
-				<p class="body-popup-desc">Tap to toggle: Focus, Avoid, or skip</p>
+				<h3 class="section-label">{$t('customize.focus')}</h3>
+				<p class="body-popup-desc">{$t('customize.tapHint')}</p>
 
 				<div class="body-layout">
 					<div class="body-figure">
@@ -591,12 +648,12 @@
 					<div class="body-areas">
 						{#each bodyAreas as area}
 							<button class="body-area-btn" class:focus={bodyPrefs[area] === 'focus'} class:avoid={bodyPrefs[area] === 'avoid'} onclick={() => toggleBodyPref(area)}>
-								<span class="area-name">{area}</span>
+								<span class="area-name">{$t('customize.' + area.toLowerCase())}</span>
 								<span class="area-status">
 									{#if bodyPrefs[area] === 'focus'}
-										<span class="status-badge status-focus">Focus</span>
+										<span class="status-badge status-focus">{$t('customize.badge.focus')}</span>
 									{:else if bodyPrefs[area] === 'avoid'}
-										<span class="status-badge status-avoid">Avoid</span>
+										<span class="status-badge status-avoid">{$t('customize.badge.avoid')}</span>
 									{:else}
 										<span class="status-badge status-blank">—</span>
 									{/if}
@@ -608,10 +665,10 @@
 			</div>
 
 			<div class="customize-section">
-				<h3 class="section-label">Note</h3>
+				<h3 class="section-label">{$t('customize.note')}</h3>
 				<textarea
 					class="note-textarea"
-					placeholder="Any special requests or preferences..."
+					placeholder={$t('customize.placeholder')}
 					bind:value={noteText}
 					rows="3"
 				></textarea>
@@ -620,16 +677,77 @@
 		</div>
 
 		<div class="body-footer">
-			<button class="btn-body-close" onclick={closeBodyCustomize}>Close</button>
-			<button class="btn-body-ok" onclick={confirmBodyCustomize}>OK</button>
+			<button class="btn-body-close" onclick={closeBodyCustomize}>{$t('detail.close')}</button>
+			<button class="btn-body-ok" onclick={confirmBodyCustomize}>{$t('detail.ok')}</button>
 		</div>
 	</div>
 {/if}
 
 {#if showInvoice}
 	<div class="invoice-modal">
-		{@render pageHeader('Invoice')}
-		<div class="invoice-scroll">
+		{@render pageHeader($t('invoice.title'))}
+		<div class="invoice-scroll-wrapper">
+			<div class="scroll-hint scroll-hint-up" class:visible={invoiceCanScrollUp}>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M18 15l-6-6-6 6" />
+				</svg>
+			</div>
+			<div class="scroll-hint scroll-hint-down" class:visible={invoiceCanScrollDown}>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M6 9l6 6 6-6" />
+				</svg>
+			</div>
+		<div class="invoice-scroll" bind:this={invoiceScrollEl} onscroll={checkInvoiceScroll} style={invoiceMask ? `-webkit-mask-image: ${invoiceMask}; mask-image: ${invoiceMask}` : ''}>
+			<div class="customer-info">
+				<h3 class="invoice-category-header">Customer Info <span class="customer-required">*</span></h3>
+				<div class="customer-row">
+					<input
+						class="customer-input"
+						type="text"
+						placeholder="First Name"
+						bind:value={customerFirstName}
+					/>
+					<input
+						class="customer-input"
+						type="text"
+						placeholder="Last Name"
+						bind:value={customerLastName}
+					/>
+				</div>
+				<div class="customize-section">
+					<h3 class="section-label">Gender <span class="customer-required">*</span></h3>
+					<div class="option-row">
+						<button class="option-btn check-btn" class:active={customerGender === 'male'} onclick={() => customerGender = 'male'}>
+							<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>
+							Male
+						</button>
+						<button class="option-btn check-btn" class:active={customerGender === 'female'} onclick={() => customerGender = 'female'}>
+							<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>
+							Female
+						</button>
+					</div>
+				</div>
+				<div class="customize-section">
+					<h3 class="section-label">Contact <span class="customer-required">*</span></h3>
+					<div class="option-row" style="margin-bottom: 12px;">
+						<button class="option-btn check-btn" class:active={customerContactType === 'phone'} onclick={() => customerContactType = 'phone'}>
+							<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>
+							Phone
+						</button>
+						<button class="option-btn check-btn" class:active={customerContactType === 'email'} onclick={() => customerContactType = 'email'}>
+							<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>
+							Email
+						</button>
+					</div>
+					<input
+						class="customer-input"
+						type={customerContactType === 'email' ? 'email' : 'tel'}
+						placeholder={customerContactType === 'email' ? 'your@email.com' : '+84 123 456 789'}
+						bind:value={customerContact}
+					/>
+				</div>
+			</div>
+
 			{#each [...allOrders().byCategory.entries()] as [catName, catItems]}
 				<h3 class="invoice-category-header">{catName}</h3>
 				<div class="invoice-list">
@@ -646,7 +764,7 @@
 										<circle cx="12" cy="12" r="10" />
 										<path d="M12 6v6l4 2" />
 									</svg>
-									<span class="detail-label">Duration</span>
+									<span class="detail-label">{$t('invoice.duration')}</span>
 									<span class="detail-value">{item.durationLabel}</span>
 								</div>
 								{#if item.categoryId === 'body-massage'}
@@ -655,7 +773,7 @@
 											<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
 											<circle cx="12" cy="7" r="4" />
 										</svg>
-										<span class="detail-label">Therapist</span>
+										<span class="detail-label">{$t('invoice.therapist')}</span>
 										<span class="detail-value">{item.therapist.charAt(0).toUpperCase() + item.therapist.slice(1)}</span>
 									</div>
 									<div class="invoice-detail-row">
@@ -666,7 +784,7 @@
 											<path d="M18 8a2 2 0 012 2v7.4a2 2 0 01-.6 1.4L15 23" />
 											<path d="M6 14l-1.5 2" />
 										</svg>
-										<span class="detail-label">Strength</span>
+										<span class="detail-label">{$t('invoice.strength')}</span>
 										<span class="detail-value">{item.strength.charAt(0).toUpperCase() + item.strength.slice(1)}</span>
 									</div>
 								{/if}
@@ -676,21 +794,117 @@
 				</div>
 			{/each}
 		</div>
+		</div>
 
 		<div class="invoice-footer">
 			{@render totalCard()}
 			<div class="body-footer">
-				<button class="btn-body-close" onclick={closeInvoice}>Back</button>
-				<button class="btn-body-ok" onclick={() => { showInvoice = false; showOrderConfirm = true; }}>Confirm</button>
+				<button class="btn-body-close" onclick={closeInvoice}>{$t('detail.back')}</button>
+				<button class="btn-body-ok" onclick={handleConfirmOrder}>{$t('detail.confirm')}</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
+{#if showPayment}
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div class="popup-backdrop" style="z-index: 105" onclick={closePayment} onkeydown={handleBackdropKeydown}>
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div class="popup-sheet payment-sheet" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+			<h2 class="popup-title" style="text-align: center; margin-bottom: 20px;">Payment Method</h2>
+			<div class="payment-grid">
+				<button class="payment-option" onclick={() => selectPayment('Cash (VND)')}>
+					<div class="payment-icon">
+						<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+							<rect x="6" y="14" width="36" height="24" rx="3" />
+							<path d="M6 22h36" />
+							<path d="M15 30h6" />
+							<text x="24" y="42" font-size="7" fill="currentColor" stroke="none" text-anchor="middle" font-weight="600">VND</text>
+						</svg>
+					</div>
+					<span class="payment-label">Cash (VND)</span>
+				</button>
+				<button class="payment-option" onclick={() => selectPayment('Cash (USD)')}>
+					<div class="payment-icon">
+						<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+							<rect x="6" y="14" width="36" height="24" rx="3" />
+							<path d="M6 22h36" />
+							<path d="M15 30h6" />
+							<text x="24" y="42" font-size="7" fill="currentColor" stroke="none" text-anchor="middle" font-weight="600">USD</text>
+						</svg>
+					</div>
+					<span class="payment-label">Cash (USD)</span>
+				</button>
+				<button class="payment-option" onclick={() => selectPayment('Credit Card')}>
+					<div class="payment-icon">
+						<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+							<rect x="4" y="10" width="40" height="28" rx="4" />
+							<path d="M4 18h40" />
+							<path d="M12 26h8" />
+							<rect x="32" y="24" width="8" height="6" rx="1" />
+						</svg>
+					</div>
+					<span class="payment-label">Credit Card</span>
+				</button>
+				<button class="payment-option" onclick={() => selectPayment('Transfer')}>
+					<div class="payment-icon">
+						<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+							<rect x="8" y="8" width="32" height="32" rx="2" />
+							<rect x="12" y="12" width="6" height="6" rx="1" />
+							<rect x="30" y="12" width="6" height="6" rx="1" />
+							<rect x="12" y="30" width="6" height="6" rx="1" />
+							<rect x="21" y="12" width="3" height="3" />
+							<rect x="12" y="21" width="3" height="3" />
+							<rect x="21" y="21" width="3" height="3" />
+							<rect x="27" y="21" width="3" height="3" />
+							<rect x="33" y="21" width="3" height="3" />
+							<rect x="21" y="27" width="3" height="3" />
+							<rect x="27" y="27" width="3" height="3" />
+							<rect x="33" y="27" width="3" height="3" />
+							<rect x="21" y="33" width="3" height="3" />
+							<rect x="27" y="33" width="3" height="3" />
+							<rect x="33" y="33" width="3" height="3" />
+						</svg>
+					</div>
+					<span class="payment-label">Transfer</span>
+				</button>
+			</div>
+			<div class="payment-total">
+				{@render totalCard()}
+			</div>
+			<div class="payment-back">
+				<button class="btn-body-close" onclick={closePayment}>{$t('detail.back')}</button>
 			</div>
 		</div>
 	</div>
 {/if}
 
 {#if showOrderConfirm}
-	<div class="invoice-modal">
-		{@render pageHeader('Order Submitted')}
+	<div class="invoice-modal" style="z-index: 110">
+		{@render pageHeader($t('order.title'))}
 		<div class="invoice-scroll">
+			<div class="order-confirm-card">
+				<h3 class="order-confirm-card-title">Customer</h3>
+				<div class="order-confirm-row">
+					<span class="detail-label">Name</span>
+					<span class="detail-value">{customerFirstName} {customerLastName}</span>
+				</div>
+				<div class="order-confirm-row">
+					<span class="detail-label">Gender</span>
+					<span class="detail-value">{customerGender.charAt(0).toUpperCase() + customerGender.slice(1)}</span>
+				</div>
+				<div class="order-confirm-row">
+					<span class="detail-label">{customerContactType === 'phone' ? 'Phone' : 'Email'}</span>
+					<span class="detail-value">{customerContact}</span>
+				</div>
+				{#if selectedPaymentMethod}
+					<div class="order-confirm-row">
+						<span class="detail-label">Payment</span>
+						<span class="detail-value">{selectedPaymentMethod}</span>
+					</div>
+				{/if}
+			</div>
+
 			{#each [...allOrders().byCategory.entries()] as [catName, catItems]}
 				<div class="order-confirm-card">
 					<h3 class="order-confirm-card-title">{catName}</h3>
@@ -707,13 +921,13 @@
 			{@render totalCard()}
 
 			<div class="order-time-section">
-				<h3 class="order-time-title">Expected Time</h3>
+				<h3 class="order-time-title">{$t('order.expectedTime')}</h3>
 				<div class="order-time-row">
 					<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 						<circle cx="12" cy="12" r="10" />
 						<path d="M12 6v6l4 2" />
 					</svg>
-					<span class="detail-label">Start</span>
+					<span class="detail-label">{$t('order.start')}</span>
 					<span class="detail-value">2:00 PM</span>
 				</div>
 				<div class="order-time-row">
@@ -721,14 +935,14 @@
 						<circle cx="12" cy="12" r="10" />
 						<path d="M12 6v6l4 2" />
 					</svg>
-					<span class="detail-label">End</span>
+					<span class="detail-label">{$t('order.end')}</span>
 					<span class="detail-value">3:30 PM</span>
 				</div>
 			</div>
 		</div>
 
 		<div class="invoice-footer">
-			<a href={getExpectUrl()} class="btn-body-ok order-continue-btn">Continue</a>
+			<a href={getExpectUrl()} class="btn-body-ok order-continue-btn">{$t('detail.continue')}</a>
 		</div>
 	</div>
 {/if}
@@ -959,6 +1173,75 @@
 		border-top-right-radius: 24px;
 		padding: 32px 24px 40px;
 		animation: slideUp 0.3s ease;
+	}
+
+	.payment-sheet {
+		max-width: 100%;
+		border-radius: 24px 24px 0 0;
+		padding: 28px 24px 32px;
+	}
+
+	.payment-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+	}
+
+	.payment-option {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+		padding: 20px 12px;
+		border-radius: 16px;
+		background: rgba(255,255,255,0.04);
+		border: 1px solid rgba(193,154,107,0.15);
+		cursor: pointer;
+		color: inherit;
+		font-family: inherit;
+		transition: background 0.2s, border-color 0.2s, transform 0.15s;
+	}
+
+	.payment-option:hover {
+		background: rgba(193,154,107,0.1);
+		border-color: rgba(193,154,107,0.4);
+		transform: scale(1.03);
+	}
+
+	.payment-option:active {
+		transform: scale(0.97);
+	}
+
+	.payment-icon {
+		width: 44px;
+		height: 44px;
+		color: #c19a6b;
+	}
+
+	.payment-icon svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	.payment-label {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #e8e0d6;
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+	}
+
+	.payment-total {
+		margin-top: 24px;
+	}
+
+	.payment-back {
+		margin-top: 24px;
+		display: flex;
+	}
+
+	.payment-back .btn-body-close {
+		flex: 1;
 	}
 
 	.popup-footer {
@@ -1291,6 +1574,11 @@
 	}
 
 	/* Total bar */
+	.total-bar-tap {
+		cursor: pointer;
+		width: 100%;
+	}
+
 	.total-bar {
 		display: flex;
 		align-items: center;
@@ -1447,8 +1735,14 @@
 		padding: 24px 24px 16px;
 	}
 
-	.invoice-scroll {
+	.invoice-scroll-wrapper {
+		position: relative;
 		flex: 1;
+		min-height: 0;
+	}
+
+	.invoice-scroll {
+		height: 100%;
 		overflow-y: auto;
 		padding: 8px 24px 24px;
 		scrollbar-width: none;
@@ -1460,11 +1754,11 @@
 	}
 
 	.invoice-category-header {
-		font-family: 'Playfair Display', serif;
-		font-size: 1rem;
+		font-size: 0.72rem;
 		font-weight: 600;
-		color: #c19a6b;
-		letter-spacing: 0.04em;
+		color: #6b6b6b;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
 		margin-bottom: 12px;
 		margin-top: 20px;
 	}
@@ -1563,11 +1857,11 @@
 	}
 
 	.order-confirm-card-title {
-		font-family: 'Playfair Display', serif;
-		font-size: 0.95rem;
+		font-size: 0.72rem;
 		font-weight: 600;
-		color: #c19a6b;
-		letter-spacing: 0.04em;
+		color: #6b6b6b;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
 		padding-bottom: 8px;
 		border-bottom: 1px solid rgba(193,154,107,0.12);
 	}
@@ -1635,6 +1929,77 @@
 		display: block;
 		text-align: center;
 		text-decoration: none;
+	}
+
+	/* Customer Info */
+	.customer-info {
+		margin-top: 8px;
+	}
+
+	.customer-row {
+		display: flex;
+		gap: 10px;
+		margin-bottom: 16px;
+	}
+
+	.customer-input {
+		flex: 1;
+		width: 100%;
+		padding: 14px 16px;
+		border-radius: 12px;
+		background: rgba(255,255,255,0.12);
+		border: 1px solid rgba(255,255,255,0.3);
+		color: #fff;
+		font-size: 0.95rem;
+		font-family: inherit;
+		font-weight: 400;
+		outline: none;
+		transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+	}
+
+	.customer-input::placeholder {
+		color: rgba(255,255,255,0.45);
+	}
+
+	.customer-input:focus {
+		border-color: rgba(255,255,255,0.6);
+		background: rgba(255,255,255,0.16);
+		box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
+	}
+
+	.customer-required {
+		color: #e85454;
+		font-size: 0.8rem;
+	}
+
+	.check-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		background: rgba(255,255,255,0.08);
+		border-color: rgba(255,255,255,0.25);
+		color: rgba(255,255,255,0.7);
+	}
+
+	.check-btn.active {
+		background: rgba(255,255,255,0.15);
+		border-color: rgba(255,255,255,0.5);
+		color: #fff;
+	}
+
+	.check-icon {
+		width: 18px;
+		height: 18px;
+		flex-shrink: 0;
+		opacity: 0;
+		transform: scale(0.6);
+		transition: opacity 0.2s, transform 0.2s;
+	}
+
+	.check-btn.active .check-icon {
+		opacity: 1;
+		transform: scale(1);
 	}
 
 	@media (max-width: 640px) {

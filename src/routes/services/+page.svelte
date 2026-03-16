@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { t } from '$lib/i18n';
 
 	interface ServiceItem {
 		title: string;
@@ -8,26 +9,26 @@
 		href: string;
 	}
 
-	const services: ServiceItem[] = [
+	let services = $derived<ServiceItem[]>([
 		{
-			title: 'Standard',
-			description: 'Random Staff & Room',
+			title: $t('services.standard'),
+			description: $t('services.standard.desc'),
 			id: 'standard',
 			href: '/services/standard'
 		},
 		{
-			title: 'Premium',
-			description: 'Design Your Own Journey',
+			title: $t('services.premium'),
+			description: $t('services.premium.desc'),
 			id: 'premium',
 			href: '/services/premium'
 		},
 		{
-			title: 'Homespa',
-			description: 'Spa at Your Place',
+			title: $t('services.homespa'),
+			description: $t('services.homespa.desc'),
 			id: 'homespa',
 			href: '/services/homespa'
 		}
-	];
+	]);
 
 	let visible = $state(false);
 
@@ -45,7 +46,7 @@
 <main>
 	<div class="page" class:visible>
 		<div class="header">
-			<h1 class="title">Select Experience</h1>
+			<h1 class="title">{$t('services.title')}</h1>
 			<div class="divider"></div>
 		</div>
 
@@ -82,7 +83,7 @@
 			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 				<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
 			</svg>
-			Home
+			{$t('services.back')}
 		</a>
 	</div>
 </main>

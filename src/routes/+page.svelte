@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { t, setLocale, type Locale } from '$lib/i18n';
 
 	interface FlagItem {
 		emoji: string;
@@ -14,6 +16,19 @@
 		{ emoji: '🇻🇳', language: 'Vietnamese', native: 'Tiếng Việt' },
 		{ emoji: '🇯🇵', language: 'Japanese', native: '日本語' }
 	];
+
+	const flagLocaleMap: Record<string, Locale> = {
+		Korean: 'ko',
+		Chinese: 'zh',
+		English: 'en',
+		Vietnamese: 'vi',
+		Japanese: 'ja'
+	};
+
+	function selectLanguage(flag: FlagItem) {
+		setLocale(flagLocaleMap[flag.language] ?? 'en');
+		goto('/services');
+	}
 
 	let visible = $state(false);
 
@@ -36,7 +51,7 @@
 				<img src="/logo.png" alt="Ngan Ha Spa Logo" />
 			</div>
 			<h1 class="salon-name">Ngan Ha</h1>
-			<h2 class="mission-text">Let Us Understand You</h2>
+			<h2 class="mission-text">{$t('home.tagline')}</h2>
 			<div class="divider"></div>
 		</div>
 
@@ -44,18 +59,16 @@
 		<div class="flags-orbit">
 			{#each flags as flag, i}
 				<div class="orbit-ring" style="--idx:{i}; --total:{flags.length}">
-					<a
+					<button
 						class="flag-card"
-						href={flag.language === 'English' ? '/services' : undefined}
-						role="button"
-						tabindex="0"
+						onclick={() => selectLanguage(flag)}
 					>
 						<div class="flag-emoji-wrapper">
 							<span class="flag-emoji">{flag.emoji}</span>
 							<div class="flag-glow"></div>
 						</div>
 						<span class="flag-native">{flag.native}</span>
-					</a>
+					</button>
 				</div>
 			{/each}
 		</div>

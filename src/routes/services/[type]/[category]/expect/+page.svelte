@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { t } from '$lib/i18n';
 
 	let visible = $state(false);
 	let serviceType = $derived($page.params.type);
@@ -26,7 +27,7 @@
 		return amount.toLocaleString('vi-VN') + 'đ';
 	}
 
-	const stepLabels = ['Preparing', 'Service', 'Feedback'];
+	let stepLabels = $derived([$t('expect.step.preparing'), $t('expect.step.service'), $t('expect.step.feedback')]);
 
 	onMount(() => {
 		setTimeout(() => { visible = true; }, 100);
@@ -40,7 +41,7 @@
 <main>
 	<div class="page" class:visible>
 		<div class="header">
-			<h1 class="title">What to Expect?</h1>
+			<h1 class="title">{$t('expect.title')}</h1>
 			<div class="divider"></div>
 		</div>
 
@@ -73,18 +74,18 @@
 
 		<div class="sections">
 			<div class="section">
-				<h2 class="step-detail-title">Preparing</h2>
+				<h2 class="step-detail-title">{$t('expect.step.preparing')}</h2>
 				<div class="step-detail-items">
 					<div class="step-detail-card">
-						<span class="step-detail-name">Foot wash with herbal powder</span>
-						<p class="step-detail-desc">Cleanse and relax your feet</p>
+						<span class="step-detail-name">{$t('expect.footwash.title')}</span>
+						<p class="step-detail-desc">{$t('expect.footwash.desc')}</p>
 					</div>
-					<p class="step-detail-note">Please enjoy herbal foot bath, hot compress, sip some tea, and give us a few minutes to prepare your room.</p>
+					<p class="step-detail-note">{$t('expect.preparing.note')}</p>
 				</div>
 			</div>
 
 			<div class="section">
-				<h2 class="step-detail-title">Service</h2>
+				<h2 class="step-detail-title">{$t('expect.step.service')}</h2>
 				<div class="step-detail-items">
 					<div class="step-detail-card services-combined-card">
 						{#each selectedItems as item, i}
@@ -99,20 +100,20 @@
 								<circle cx="12" cy="12" r="10" />
 								<path d="M12 6v6l4 2" />
 							</svg>
-							<span class="service-total-label">Total service time</span>
+							<span class="service-total-label">{$t('expect.totalServiceTime')}</span>
 							<span class="service-total-value">{totalMinutes} min</span>
 						</div>
 					</div>
-					<p class="step-detail-note">You have the first 15 minutes to request for a new massage therapist.</p>
+					<p class="step-detail-note">{$t('expect.therapistSwap')}</p>
 				</div>
 			</div>
 
 			<div class="section">
-				<h2 class="step-detail-title">Feedback</h2>
+				<h2 class="step-detail-title">{$t('expect.step.feedback')}</h2>
 				<div class="step-detail-items">
 					<div class="step-detail-card">
-						<span class="step-detail-name">Rate your experience</span>
-						<p class="step-detail-desc">After you are done with the service, please take a moment to share your feedback so that we can improve our services next time.</p>
+						<span class="step-detail-name">{$t('expect.feedback.title')}</span>
+						<p class="step-detail-desc">{$t('expect.feedback.desc')}</p>
 					</div>
 				</div>
 			</div>
@@ -123,7 +124,7 @@
 				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 					<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
 				</svg>
-				Back
+				{$t('expect.back')}
 			</a>
 		</footer>
 	</div>
