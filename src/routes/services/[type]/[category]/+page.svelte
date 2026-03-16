@@ -4,164 +4,15 @@
 	import { ordersByCategory, setCategoryOrders, getOrCreateCategoryOrders, type ServiceSelection as StoreServiceSelection } from '$lib/orderStore';
 	import { base } from '$app/paths';
 	import { t } from '$lib/i18n';
-
-	interface DurationOption {
-		minutes: number;
-		label: string;
-		priceVND: number;
-	}
-
-	interface Service {
-		name: string;
-		description: string;
-		durations: DurationOption[];
-		bestSeller?: boolean;
-	}
-
-	interface Category {
-		name: string;
-		id: string;
-		services: Service[];
-	}
-
-	function buildDurations(basePrice: number): DurationOption[] {
-		const round = (n: number) => Math.round(n / 10000) * 10000;
-		return [
-			{ minutes: 45, label: '45 mins', priceVND: basePrice },
-			{ minutes: 60, label: '60 mins', priceVND: round(basePrice * 1.3) },
-			{ minutes: 70, label: '70 mins', priceVND: round(basePrice * 1.5) },
-			{ minutes: 90, label: '90 mins', priceVND: round(basePrice * 1.85) },
-			{ minutes: 120, label: '120 mins', priceVND: round(basePrice * 2.4) },
-			{ minutes: 180, label: '180 mins', priceVND: round(basePrice * 3.5) },
-			{ minutes: 240, label: '240 mins', priceVND: round(basePrice * 4.5) },
-		];
-	}
-
-	const categories: Category[] = [
-		{
-			name: 'Body Massage', id: 'body-massage',
-			services: [
-				{ name: 'Traditional Vietnamese', description: 'Full body relaxation using ancient Vietnamese techniques with warm herbal oils', durations: buildDurations(450000), bestSeller: true },
-				{ name: 'Deep Tissue', description: 'Intense pressure targeting deep muscle layers to release chronic tension', durations: buildDurations(550000) },
-				{ name: 'Aromatherapy Bliss', description: 'Gentle strokes combined with premium essential oils for total mind-body harmony', durations: buildDurations(500000) },
-				{ name: 'Hot Stone Therapy', description: 'Heated basalt stones placed along energy points to melt away stress', durations: buildDurations(650000) },
-				{ name: 'Thai Stretch', description: 'Dynamic stretching and pressure point work inspired by Thai healing traditions', durations: buildDurations(500000) },
-				{ name: 'Four Hands Massage', description: 'Two therapists work in synchronized rhythm for a deeply immersive experience', durations: buildDurations(800000) },
-				{ name: 'Bamboo Rolling', description: 'Warm bamboo sticks rolled along muscles to ease tension and boost circulation', durations: buildDurations(580000) },
-				{ name: 'Herbal Compress', description: 'Steamed herbal poultice pressed along the body to soothe aches and inflammation', durations: buildDurations(520000) }
-			]
-		},
-		{
-			name: 'Foot Massage', id: 'foot-massage',
-			services: [
-				{ name: 'Reflexology', description: 'Targeted pressure on reflex points to restore balance and improve circulation', durations: buildDurations(350000), bestSeller: true },
-				{ name: 'Herbal Foot Soak', description: 'Warm herbal bath followed by a soothing foot and calf massage', durations: buildDurations(300000) },
-				{ name: 'Deep Foot Relief', description: 'Intensive treatment for tired feet focusing on arches and heels', durations: buildDurations(400000) },
-				{ name: 'Foot & Leg Combo', description: 'Complete lower body treatment from toes to knees with warm oil', durations: buildDurations(450000) },
-				{ name: 'Detox Foot Therapy', description: 'Cleansing foot treatment with charcoal wrap and pressure point massage', durations: buildDurations(380000) },
-				{ name: 'Ginger Foot Wrap', description: 'Warming ginger paste wrap to improve blood flow and relieve cold feet', durations: buildDurations(320000) },
-				{ name: 'Salt Scrub & Soak', description: 'Himalayan salt exfoliation followed by mineral-rich warm water soak', durations: buildDurations(360000) },
-				{ name: 'Plantar Relief', description: 'Specialized deep pressure therapy targeting plantar fascia and heel pain', durations: buildDurations(420000) }
-			]
-		},
-		{
-			name: 'Hair Wash', id: 'hair-wash',
-			services: [
-				{ name: 'Signature Wash', description: 'Relaxing shampoo with scalp massage using premium herbal products', durations: buildDurations(200000), bestSeller: true },
-				{ name: 'Deep Conditioning', description: 'Nourishing treatment to restore shine and strength to damaged hair', durations: buildDurations(300000) },
-				{ name: 'Scalp Detox', description: 'Deep cleansing treatment to remove buildup and stimulate hair growth', durations: buildDurations(350000) },
-				{ name: 'Hot Oil Treatment', description: 'Warm coconut oil massage into scalp and hair for deep hydration', durations: buildDurations(280000) },
-				{ name: 'Herbal Rinse', description: 'Traditional Vietnamese herb-infused rinse for healthy glossy hair', durations: buildDurations(250000) },
-				{ name: 'Keratin Smooth', description: 'Professional keratin infusion to tame frizz and add lasting silky shine', durations: buildDurations(400000) },
-				{ name: 'Charcoal Purify', description: 'Activated charcoal cleanse to draw out impurities and refresh oily scalps', durations: buildDurations(320000) },
-				{ name: 'Minty Cool Wash', description: 'Peppermint-infused shampoo with cooling scalp massage for instant freshness', durations: buildDurations(230000) }
-			]
-		},
-		{
-			name: 'Facial', id: 'facial',
-			services: [
-				{ name: 'Classic Glow Facial', description: 'Deep cleansing, exfoliation and hydrating mask for radiant skin', durations: buildDurations(400000), bestSeller: true },
-				{ name: 'Anti-Aging Lift', description: 'Firming treatment with collagen boost and gentle micro-current therapy', durations: buildDurations(600000) },
-				{ name: 'Acne Clear', description: 'Purifying treatment with salicylic acid and calming blue LED light', durations: buildDurations(450000) },
-				{ name: 'Vitamin C Brightening', description: 'Luminous treatment to fade dark spots and even out skin tone', durations: buildDurations(500000) },
-				{ name: 'Hydra Rescue', description: 'Intensive moisture infusion for dry and dehydrated skin types', durations: buildDurations(420000) },
-				{ name: 'Gold Leaf Luxury', description: 'Pure gold leaf mask to boost radiance and promote cellular renewal', durations: buildDurations(750000) },
-				{ name: 'Oxygen Boost', description: 'High-pressure oxygen spray to plump skin and reduce fine lines instantly', durations: buildDurations(550000) },
-				{ name: 'Sensitive Calm', description: 'Ultra-gentle treatment with aloe and chamomile for reactive and redness-prone skin', durations: buildDurations(430000) }
-			]
-		},
-		{
-			name: 'Heel Care', id: 'heel-care',
-			services: [
-				{ name: 'Smooth Heel Treatment', description: 'Exfoliation and deep moisturizing to soften rough cracked heels', durations: buildDurations(250000), bestSeller: true },
-				{ name: 'Paraffin Wax Wrap', description: 'Warm paraffin coating to lock in moisture and heal dry skin', durations: buildDurations(300000) },
-				{ name: 'Callus Removal', description: 'Professional removal of hardened skin with gentle buffing tools', durations: buildDurations(200000) },
-				{ name: 'Heel Repair Mask', description: 'Overnight-style intensive mask treatment for severely damaged heels', durations: buildDurations(280000) },
-				{ name: 'Foot Peel & Polish', description: 'Chemical peel to reveal baby-soft skin followed by nourishing cream', durations: buildDurations(320000) },
-				{ name: 'Shea Butter Wrap', description: 'Rich shea butter heated wrap to deeply nourish and restore cracked heels', durations: buildDurations(270000) },
-				{ name: 'Pumice & Oil Ritual', description: 'Traditional pumice stone buffing followed by warm essential oil massage', durations: buildDurations(220000) },
-				{ name: 'Heel Recovery Plus', description: 'Multi-step clinical treatment combining peel, mask and sealing balm', durations: buildDurations(380000) }
-			]
-		},
-		{
-			name: 'Nails', id: 'nails',
-			services: [
-				{ name: 'Gel Manicure', description: 'Long-lasting gel polish with cuticle care and hand massage', durations: buildDurations(300000), bestSeller: true },
-				{ name: 'Classic Pedicure', description: 'Full nail shaping, cuticle treatment, polish and foot massage', durations: buildDurations(250000) },
-				{ name: 'Nail Art Design', description: 'Custom hand-painted nail art with premium designs of your choice', durations: buildDurations(400000) },
-				{ name: 'Acrylic Extensions', description: 'Professional acrylic nail extensions with shape and length options', durations: buildDurations(500000) },
-				{ name: 'Mani-Pedi Combo', description: 'Complete manicure and pedicure package with gel polish finish', durations: buildDurations(450000) },
-				{ name: 'Dip Powder Nails', description: 'Durable dip powder application for a natural look with lasting color', durations: buildDurations(350000) },
-				{ name: 'Nail Repair & Strengthen', description: 'Damaged nail restoration with protein bond treatment and protective coat', durations: buildDurations(280000) },
-				{ name: 'Luxury Hand Spa', description: 'Full hand treatment with scrub, mask, paraffin dip and gel polish finish', durations: buildDurations(550000) }
-			]
-		},
-		{
-			name: 'Ear Clean', id: 'ear-clean',
-			services: [
-				{ name: 'Traditional Ear Clean', description: 'Gentle ear cleaning with specialized bamboo tools and soft touch', durations: buildDurations(150000), bestSeller: true },
-				{ name: 'Ear Candling', description: 'Holistic ear candling therapy to remove buildup and promote relaxation', durations: buildDurations(200000) },
-				{ name: 'Deep Clean & Massage', description: 'Thorough cleaning followed by soothing ear and temple massage', durations: buildDurations(250000) },
-				{ name: 'Ear Acupressure', description: 'Pressure point stimulation on the ear to relieve stress and headaches', durations: buildDurations(180000) },
-				{ name: 'Premium Ear Spa', description: 'Full ear treatment with cleaning, massage, warm compress and oils', durations: buildDurations(300000) },
-				{ name: 'Warm Oil Ear Soak', description: 'Gentle warm herbal oil dripped into the ear canal for deep soothing relief', durations: buildDurations(220000) },
-				{ name: 'ASMR Ear Therapy', description: 'Feather-light tools and soft brushing designed for deep relaxation and tingles', durations: buildDurations(280000) },
-				{ name: 'Ear & Scalp Combo', description: 'Combined ear cleaning with invigorating scalp massage for full head relaxation', durations: buildDurations(350000) }
-			]
-		},
-		{
-			name: 'Barber', id: 'barber',
-			services: [
-				{ name: 'Classic Haircut', description: 'Precision cut with consultation, wash, and professional styling', durations: buildDurations(200000), bestSeller: true },
-				{ name: 'Hot Towel Shave', description: 'Traditional straight razor shave with hot towel and aftershave balm', durations: buildDurations(250000) },
-				{ name: 'Beard Trim & Shape', description: 'Expert beard grooming with trimming, shaping and conditioning oil', durations: buildDurations(150000) },
-				{ name: 'Hair Color', description: 'Professional hair coloring service with premium ammonia-free dyes', durations: buildDurations(400000) },
-				{ name: 'Cut & Shave Combo', description: 'Complete grooming package with haircut, shave and styling finish', durations: buildDurations(350000) },
-				{ name: 'Fade & Design', description: 'Precision skin fade with optional razor line designs and patterns', durations: buildDurations(280000) },
-				{ name: 'Grey Blend Camo', description: 'Natural-looking grey coverage blended seamlessly into existing hair color', durations: buildDurations(350000) },
-				{ name: 'Scalp Treatment', description: 'Deep cleansing scalp therapy with exfoliation and revitalizing serum', durations: buildDurations(300000) }
-			]
-		},
-		{
-			name: 'VIP Pack', id: 'vip-pack',
-			services: [
-				{ name: 'Royal Treatment', description: 'Three-hour full body experience with massage, facial and foot care', durations: buildDurations(1500000), bestSeller: true },
-				{ name: 'Couples Retreat', description: 'Side-by-side spa session for two with champagne and private room', durations: buildDurations(2500000) },
-				{ name: 'Executive Refresh', description: 'Quick ninety-minute package with massage, facial and hair wash', durations: buildDurations(900000) },
-				{ name: 'Full Day Escape', description: 'All-inclusive five-hour journey through every spa service we offer', durations: buildDurations(3000000) },
-				{ name: 'Birthday Special', description: 'Celebration package with cake, decorations and premium spa services', durations: buildDurations(2000000) },
-				{ name: 'Bridal Glow Package', description: 'Pre-wedding prep with facial, body scrub, mani-pedi and hair styling', durations: buildDurations(3500000) },
-				{ name: 'Corporate Wellness', description: 'Group booking for teams with massage, foot care and refreshments included', durations: buildDurations(1800000) },
-				{ name: 'Monthly Membership', description: 'Four premium visits per month with priority booking and ten percent savings', durations: buildDurations(4000000) }
-			]
-		}
-	];
+	import PageHeader from '$lib/components/PageHeader.svelte';
+	import { catalog, type CatalogService, type CatalogCategory } from '$lib/data/catalog';
 
 	const VND_TO_USD = 25000;
 
 	let visible = $state(false);
 	let serviceType = $derived($page.params.type ?? '');
 	let categoryId = $derived($page.params.category ?? '');
+	let categories = $derived($catalog.categories);
 	let category = $derived(categories.find(c => c.id === categoryId));
 	type BodyPref = 'focus' | 'avoid' | '';
 	type TherapistPref = 'male' | 'female' | 'random';
@@ -169,13 +20,13 @@
 	const bodyAreas = ['Head', 'Neck', 'Shoulder', 'Arm', 'Back', 'Thigh', 'Calf', 'Foot'] as const;
 
 	let selectedServices = $state<Map<string, StoreServiceSelection>>(getOrCreateCategoryOrders(categoryId, $ordersByCategory));
-	let popupService = $state<Service | null>(null);
+	let popupService = $state<CatalogService | null>(null);
 	let showBodyCustomize = $state(false);
 	let showInvoice = $state(false);
 	let showPayment = $state(false);
 	let showOrderConfirm = $state(false);
 	let selectedPaymentMethod = $state('');
-	let pendingBodyService = $state<{ name: string; minutes: number } | null>(null);
+	let pendingBodyService = $state<{ id: string; minutes: number } | null>(null);
 	let bodyPrefs = $state<Record<string, BodyPref>>(Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref])));
 	let therapistPref = $state<TherapistPref>('random');
 	let strengthPref = $state<StrengthPref>('medium');
@@ -191,6 +42,15 @@
 
 	$effect(() => {
 		setCategoryOrders(categoryId, selectedServices);
+	});
+
+	$effect(() => {
+		if (popupService) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
+		return () => { document.body.style.overflow = ''; };
 	});
 
 	let canScrollUp = $state(false);
@@ -243,8 +103,8 @@
 	let totalVND = $derived(() => {
 		if (!category) return 0;
 		let sum = 0;
-		for (const [name, sel] of selectedServices) {
-			const service = category.services.find(s => s.name === name);
+		for (const [id, sel] of selectedServices) {
+			const service = category.services.find(s => s.id === id);
 			if (service) {
 				const dur = service.durations.find(d => d.minutes === sel.minutes);
 				if (dur) sum += dur.priceVND;
@@ -278,15 +138,15 @@
 			if (catOrders.size === 0) continue;
 
 			const catItems: AllOrderItem[] = [];
-			for (const [name, sel] of catOrders) {
-				const service = cat.services.find(s => s.name === name);
+			for (const [id, sel] of catOrders) {
+				const service = cat.services.find(s => s.id === id);
 				if (!service) continue;
 				const dur = service.durations.find(d => d.minutes === sel.minutes);
 				if (!dur) continue;
 				const item: AllOrderItem = {
-					categoryName: $t('category.' + cat.id),
+					categoryName: cat.name,
 					categoryId: cat.id,
-					serviceName: name,
+					serviceName: service.name,
 					minutes: sel.minutes,
 					priceVND: dur.priceVND,
 					durationLabel: dur.label,
@@ -297,7 +157,7 @@
 				catItems.push(item);
 			}
 			if (catItems.length > 0) {
-				byCategory.set($t('category.' + cat.id), catItems);
+				byCategory.set(cat.name, catItems);
 			}
 		}
 
@@ -313,7 +173,7 @@
 		snackbar = '';
 	}
 
-	function handleServiceTap(service: Service) {
+	function handleServiceTap(service: CatalogService) {
 		dismissSnackbar();
 		popupService = service;
 	}
@@ -321,7 +181,7 @@
 	function selectDuration(minutes: number) {
 		if (!popupService) return;
 		if (categoryId === 'body-massage') {
-			pendingBodyService = { name: popupService.name, minutes };
+			pendingBodyService = { id: popupService.id, minutes };
 			bodyPrefs = Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref]));
 			therapistPref = 'random';
 			strengthPref = 'medium';
@@ -333,7 +193,7 @@
 			}, 150);
 		} else {
 			const next = new Map(selectedServices);
-			next.set(popupService.name, { minutes, therapist: 'random', strength: 'medium' });
+			next.set(popupService.id, { minutes, therapist: 'random', strength: 'medium' });
 			selectedServices = next;
 			popupService = null;
 		}
@@ -350,7 +210,7 @@
 	function confirmBodyCustomize() {
 		if (!pendingBodyService) return;
 		const next = new Map(selectedServices);
-		next.set(pendingBodyService.name, {
+		next.set(pendingBodyService.id, {
 			minutes: pendingBodyService.minutes,
 			therapist: therapistPref,
 			strength: strengthPref
@@ -414,13 +274,13 @@
 	function handleConfirmOrder() {
 		if (!customerFirstName.trim() || !customerLastName.trim()) {
 			clearTimeout(snackbarTimeout);
-			snackbar = 'Please enter your first and last name';
+			snackbar = $t('invoice.validation.name');
 			snackbarTimeout = setTimeout(() => { snackbar = ''; }, 3000);
 			return;
 		}
 		if (!customerContact.trim()) {
 			clearTimeout(snackbarTimeout);
-			snackbar = customerContactType === 'email' ? 'Please enter your email' : 'Please enter your phone number';
+			snackbar = customerContactType === 'email' ? $t('invoice.validation.email') : $t('invoice.validation.phone');
 			snackbarTimeout = setTimeout(() => { snackbar = ''; }, 3000);
 			return;
 		}
@@ -438,15 +298,15 @@
 		showPayment = false;
 	}
 
-	function getSelectedPrice(service: Service): number {
-		const sel = selectedServices.get(service.name);
+	function getSelectedPrice(service: CatalogService): number {
+		const sel = selectedServices.get(service.id);
 		if (!sel) return service.durations[0].priceVND;
 		const dur = service.durations.find(d => d.minutes === sel.minutes);
 		return dur ? dur.priceVND : service.durations[0].priceVND;
 	}
 
-	function getSelectedLabel(service: Service): string | null {
-		const sel = selectedServices.get(service.name);
+	function getSelectedLabel(service: CatalogService): string | null {
+		const sel = selectedServices.get(service.id);
 		if (!sel) return null;
 		const dur = service.durations.find(d => d.minutes === sel.minutes);
 		return dur ? dur.label : null;
@@ -474,13 +334,6 @@
 
 <svelte:window onkeydown={handleBackdropKeydown} />
 
-{#snippet pageHeader(text: string)}
-	<div class="header">
-		<h1 class="title">{text}</h1>
-		<div class="divider"></div>
-	</div>
-{/snippet}
-
 {#snippet totalCard()}
 	<div class="total-bar">
 		<span class="total-label">{$t('order.total')} <span class="total-count">({globalTotalCount()} {$t('order.selected')})</span></span>
@@ -493,7 +346,7 @@
 
 <main>
 	<div class="page" class:visible>
-		{@render pageHeader($t('category.' + categoryId))}
+		<PageHeader title={category?.name ?? categoryId} />
 
 		{#if category}
 			<div class="service-list-wrapper">
@@ -511,7 +364,7 @@
 				{#each category.services as service}
 					<button
 						class="service-item"
-						class:selected={selectedServices.has(service.name)}
+						class:selected={selectedServices.has(service.id)}
 						onclick={() => handleServiceTap(service)}
 					>
 						<div class="service-info">
@@ -523,8 +376,8 @@
 								<span class="best-seller">{$t('detail.bestseller')}</span>
 							{/if}
 							<span class="service-price">{formatVND(getSelectedPrice(service))}</span>
-							{#if selectedServices.has(service.name)}
-								<span class="service-min">{selectedServices.get(service.name)?.minutes} min</span>
+							{#if selectedServices.has(service.id)}
+								<span class="service-min">{selectedServices.get(service.id)?.minutes} min</span>
 							{/if}
 						</div>
 					</button>
@@ -570,19 +423,9 @@
 				<p class="popup-desc">{popupService.description}</p>
 			</div>
 
-			<div class="duration-grid">
-				{#each popupService.durations.filter(d => d.minutes <= 90) as dur}
-					<button class="duration-card" onclick={() => selectDuration(dur.minutes)}>
-						<span class="dur-time">{dur.label}</span>
-						<span class="dur-price">{formatVND(dur.priceVND)}</span>
-						<span class="dur-usd">~${(dur.priceVND / VND_TO_USD).toFixed(2)}</span>
-					</button>
-				{/each}
-			</div>
-
-			{#if showMoreDurations}
-				<div class="duration-grid" style="margin-top: 12px;">
-					{#each popupService.durations.filter(d => d.minutes > 90) as dur}
+			<div class="popup-scroll-area">
+				<div class="duration-grid">
+					{#each popupService.durations.filter(d => d.minutes <= 90) as dur}
 						<button class="duration-card" onclick={() => selectDuration(dur.minutes)}>
 							<span class="dur-time">{dur.label}</span>
 							<span class="dur-price">{formatVND(dur.priceVND)}</span>
@@ -590,16 +433,28 @@
 						</button>
 					{/each}
 				</div>
-			{/if}
 
-			<button class="show-more-btn" onclick={() => showMoreDurations = !showMoreDurations}>
-				<span>{showMoreDurations ? 'Show Less' : 'Show More'}</span>
-				<svg class="show-more-chevron" class:flipped={showMoreDurations} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M6 9l6 6 6-6" />
-				</svg>
-			</button>
+				{#if showMoreDurations}
+					<div class="duration-grid" style="margin-top: 12px;">
+						{#each popupService.durations.filter(d => d.minutes > 90) as dur}
+							<button class="duration-card" onclick={() => selectDuration(dur.minutes)}>
+								<span class="dur-time">{dur.label}</span>
+								<span class="dur-price">{formatVND(dur.priceVND)}</span>
+								<span class="dur-usd">~${(dur.priceVND / VND_TO_USD).toFixed(2)}</span>
+							</button>
+						{/each}
+					</div>
+				{/if}
 
-			<div class="popup-footer" style="margin-top: 16px;">
+				<button class="show-more-btn" onclick={() => showMoreDurations = !showMoreDurations}>
+					<span>{showMoreDurations ? $t('detail.showLess') : $t('detail.showMore')}</span>
+					<svg class="show-more-chevron" class:flipped={showMoreDurations} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M6 9l6 6 6-6" />
+					</svg>
+				</button>
+			</div>
+
+			<div class="popup-footer">
 				<button class="btn-body-close" onclick={closePopup}>{$t('detail.close')}</button>
 			</div>
 		</div>
@@ -608,7 +463,7 @@
 
 {#if showBodyCustomize}
 	<div class="body-modal">
-		{@render pageHeader($t('customize.title'))}
+		<PageHeader title={$t('customize.title')} inline />
 		<div class="body-scroll-wrapper">
 			<div class="scroll-hint scroll-hint-up" class:visible={bodyCanScrollUp}>
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -710,7 +565,7 @@
 
 {#if showInvoice}
 	<div class="invoice-modal">
-		{@render pageHeader($t('invoice.title'))}
+		<PageHeader title={$t('invoice.title')} inline />
 		<div class="invoice-scroll-wrapper">
 			<div class="scroll-hint scroll-hint-up" class:visible={invoiceCanScrollUp}>
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -724,50 +579,50 @@
 			</div>
 		<div class="invoice-scroll" bind:this={invoiceScrollEl} onscroll={checkInvoiceScroll} style={invoiceMask ? `-webkit-mask-image: ${invoiceMask}; mask-image: ${invoiceMask}` : ''}>
 			<div class="customer-info">
-				<h3 class="invoice-category-header">Customer Info <span class="customer-required">*</span></h3>
+				<h3 class="invoice-category-header">{$t('invoice.customerInfo')} <span class="customer-required">*</span></h3>
 				<div class="customer-row">
 					<input
 						class="customer-input"
 						type="text"
-						placeholder="First Name"
+						placeholder={$t('invoice.firstName')}
 						bind:value={customerFirstName}
 					/>
 					<input
 						class="customer-input"
 						type="text"
-						placeholder="Last Name"
+						placeholder={$t('invoice.lastName')}
 						bind:value={customerLastName}
 					/>
 				</div>
 				<div class="customize-section">
-					<h3 class="section-label">Gender <span class="customer-required">*</span></h3>
+					<h3 class="section-label">{$t('invoice.gender')} <span class="customer-required">*</span></h3>
 					<div class="option-row">
 						<button class="option-btn check-btn" class:active={customerGender === 'male'} onclick={() => customerGender = 'male'}>
 							<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>
-							Male
+							{$t('customize.male')}
 						</button>
 						<button class="option-btn check-btn" class:active={customerGender === 'female'} onclick={() => customerGender = 'female'}>
 							<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>
-							Female
+							{$t('customize.female')}
 						</button>
 					</div>
 				</div>
 				<div class="customize-section">
-					<h3 class="section-label">Contact <span class="customer-required">*</span></h3>
+					<h3 class="section-label">{$t('invoice.contact')} <span class="customer-required">*</span></h3>
 					<div class="option-row" style="margin-bottom: 12px;">
 						<button class="option-btn check-btn" class:active={customerContactType === 'phone'} onclick={() => customerContactType = 'phone'}>
 							<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>
-							Phone
+							{$t('invoice.phone')}
 						</button>
 						<button class="option-btn check-btn" class:active={customerContactType === 'email'} onclick={() => customerContactType = 'email'}>
 							<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>
-							Email
+							{$t('invoice.email')}
 						</button>
 					</div>
 					<input
 						class="customer-input"
 						type={customerContactType === 'email' ? 'email' : 'tel'}
-						placeholder={customerContactType === 'email' ? 'your@email.com' : '+84 123 456 789'}
+						placeholder={customerContactType === 'email' ? $t('invoice.emailPlaceholder') : $t('invoice.phonePlaceholder')}
 						bind:value={customerContact}
 					/>
 				</div>
@@ -836,9 +691,9 @@
 	<div class="popup-backdrop" style="z-index: 105" onclick={closePayment} onkeydown={handleBackdropKeydown}>
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div class="popup-sheet payment-sheet" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
-			<h2 class="popup-title" style="text-align: center; margin-bottom: 20px;">Payment Method</h2>
+			<h2 class="popup-title" style="text-align: center; margin-bottom: 20px;">{$t('payment.title')}</h2>
 			<div class="payment-grid">
-				<button class="payment-option" onclick={() => selectPayment('Cash (VND)')}>
+				<button class="payment-option" onclick={() => selectPayment('payment.cashVnd')}>
 					<div class="payment-icon">
 						<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 							<rect x="6" y="14" width="36" height="24" rx="3" />
@@ -847,9 +702,9 @@
 							<text x="24" y="42" font-size="7" fill="currentColor" stroke="none" text-anchor="middle" font-weight="600">VND</text>
 						</svg>
 					</div>
-					<span class="payment-label">Cash (VND)</span>
+					<span class="payment-label">{$t('payment.cashVnd')}</span>
 				</button>
-				<button class="payment-option" onclick={() => selectPayment('Cash (USD)')}>
+				<button class="payment-option" onclick={() => selectPayment('payment.cashUsd')}>
 					<div class="payment-icon">
 						<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 							<rect x="6" y="14" width="36" height="24" rx="3" />
@@ -858,9 +713,9 @@
 							<text x="24" y="42" font-size="7" fill="currentColor" stroke="none" text-anchor="middle" font-weight="600">USD</text>
 						</svg>
 					</div>
-					<span class="payment-label">Cash (USD)</span>
+					<span class="payment-label">{$t('payment.cashUsd')}</span>
 				</button>
-				<button class="payment-option" onclick={() => selectPayment('Credit Card')}>
+				<button class="payment-option" onclick={() => selectPayment('payment.creditCard')}>
 					<div class="payment-icon">
 						<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 							<rect x="4" y="10" width="40" height="28" rx="4" />
@@ -869,9 +724,9 @@
 							<rect x="32" y="24" width="8" height="6" rx="1" />
 						</svg>
 					</div>
-					<span class="payment-label">Credit Card</span>
+					<span class="payment-label">{$t('payment.creditCard')}</span>
 				</button>
-				<button class="payment-option" onclick={() => selectPayment('Transfer')}>
+				<button class="payment-option" onclick={() => selectPayment('payment.transfer')}>
 					<div class="payment-icon">
 						<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 							<rect x="8" y="8" width="32" height="32" rx="2" />
@@ -891,7 +746,7 @@
 							<rect x="33" y="33" width="3" height="3" />
 						</svg>
 					</div>
-					<span class="payment-label">Transfer</span>
+					<span class="payment-label">{$t('payment.transfer')}</span>
 				</button>
 			</div>
 			<div class="payment-total">
@@ -906,25 +761,25 @@
 
 {#if showOrderConfirm}
 	<div class="invoice-modal" style="z-index: 110">
-		{@render pageHeader($t('order.title'))}
+		<PageHeader title={$t('order.title')} inline />
 		<div class="invoice-scroll">
 			<div class="order-confirm-card">
-				<h3 class="order-confirm-card-title">Customer</h3>
+				<h3 class="order-confirm-card-title">{$t('order.customer')}</h3>
 				<div class="order-confirm-row">
-					<span class="detail-label">Name</span>
+					<span class="detail-label">{$t('order.name')}</span>
 					<span class="detail-value">{customerFirstName} {customerLastName}</span>
 				</div>
 				<div class="order-confirm-row">
-					<span class="detail-label">Gender</span>
-					<span class="detail-value">{customerGender.charAt(0).toUpperCase() + customerGender.slice(1)}</span>
+					<span class="detail-label">{$t('order.gender')}</span>
+					<span class="detail-value">{$t('customize.' + customerGender)}</span>
 				</div>
 				<div class="order-confirm-row">
-					<span class="detail-label">{customerContactType === 'phone' ? 'Phone' : 'Email'}</span>
+					<span class="detail-label">{customerContactType === 'phone' ? $t('order.phone') : $t('order.email')}</span>
 					<span class="detail-value">{customerContact}</span>
 				</div>
 				<div class="order-confirm-row">
-					<span class="detail-label">Payment</span>
-					<span class="detail-value">{selectedPaymentMethod || '—'}</span>
+					<span class="detail-label">{$t('order.payment')}</span>
+					<span class="detail-value">{selectedPaymentMethod ? $t(selectedPaymentMethod) : '—'}</span>
 				</div>
 			</div>
 
@@ -991,35 +846,6 @@
 
 	.page.visible {
 		opacity: 1;
-	}
-
-	.header {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 10;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 12px;
-		padding: 12px 24px 16px;
-		background: linear-gradient(to bottom, #0f0f0f 50%, transparent);
-	}
-
-	.title {
-		font-family: 'Playfair Display', serif;
-		font-size: clamp(1.4rem, 4vw, 2rem);
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		color: #c19a6b;
-		text-align: center;
-	}
-
-	.divider {
-		width: 180px;
-		height: 1px;
-		background: linear-gradient(90deg, transparent, #c19a6b, transparent);
 	}
 
 	.service-list-wrapper {
@@ -1192,11 +1018,12 @@
 		width: 100%;
 		max-width: 480px;
 		max-height: 85vh;
-		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
 		background: #1a1a1a;
 		border-top-left-radius: 24px;
 		border-top-right-radius: 24px;
-		padding: 32px 24px 40px;
+		padding: 0 24px;
 		animation: slideUp 0.3s ease;
 	}
 
@@ -1270,13 +1097,28 @@
 	}
 
 	.popup-footer {
+		flex-shrink: 0;
 		display: flex;
 		gap: 12px;
-		padding: 16px 0 0;
+		padding: 16px 0 24px;
 	}
 
 	.popup-header {
-		margin-bottom: 24px;
+		flex-shrink: 0;
+		padding-top: 32px;
+		padding-bottom: 24px;
+	}
+
+	.popup-scroll-area {
+		flex: 1;
+		min-height: 0;
+		overflow-y: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	.popup-scroll-area::-webkit-scrollbar {
+		display: none;
 	}
 
 	.popup-title {
@@ -1378,13 +1220,6 @@
 		display: flex;
 		flex-direction: column;
 		animation: fadeIn 0.25s ease;
-	}
-
-	.body-modal > .header {
-		position: relative;
-		flex-shrink: 0;
-		background: #0f0f0f;
-		padding: 24px 24px 16px;
 	}
 
 	.body-scroll-wrapper {
@@ -1777,13 +1612,6 @@
 		animation: fadeIn 0.25s ease;
 	}
 
-	.invoice-modal > .header {
-		position: relative;
-		flex-shrink: 0;
-		background: #0f0f0f;
-		padding: 24px 24px 16px;
-	}
-
 	.invoice-scroll-wrapper {
 		position: relative;
 		flex: 1;
@@ -2075,7 +1903,15 @@
 		}
 
 		.popup-sheet {
-			padding: 28px 20px 36px;
+			padding: 0 20px;
+		}
+
+		.popup-header {
+			padding-top: 28px;
+		}
+
+		.popup-footer {
+			padding-bottom: 20px;
 		}
 
 		.duration-card {

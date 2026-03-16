@@ -1,0 +1,308 @@
+{
+	"experiences": {
+		"standard": { "title": "Tiêu chuẩn", "description": "Nhân viên & phòng ngẫu nhiên" },
+		"premium": { "title": "Cao cấp", "description": "Thiết kế hành trình riêng" },
+		"homespa": { "title": "Spa tại nhà", "description": "Spa tại nhà" }
+	},
+	"categories": {
+		"body-massage": "Massage body",
+		"foot-massage": "Massage chân",
+		"hair-wash": "Gội đầu",
+		"facial": "Chăm sóc da mặt",
+		"heel-care": "Chăm sóc gót chân",
+		"nails": "Làm móng",
+		"ear-clean": "Lấy ráy tai",
+		"barber": "Cắt tóc",
+		"vip-pack": "Gói VIP"
+	},
+	"services": {
+		"traditional-vietnamese": {
+			"name": "Massage truyền thống Việt Nam",
+			"description": "Thư giãn toàn thân bằng kỹ thuật cổ truyền Việt Nam với tinh dầu thảo mộc ấm"
+		},
+		"deep-tissue": {
+			"name": "Massage mô sâu",
+			"description": "Lực ấn sâu tác động vào các lớp cơ bên trong giúp giải phóng căng cứng mãn tính"
+		},
+		"aromatherapy-bliss": {
+			"name": "Massage tinh dầu thơm",
+			"description": "Động tác vuốt nhẹ kết hợp tinh dầu cao cấp mang lại sự hài hòa thân-tâm trọn vẹn"
+		},
+		"hot-stone-therapy": {
+			"name": "Đá nóng trị liệu",
+			"description": "Đá bazan nóng đặt dọc các huyệt đạo giúp xua tan căng thẳng hiệu quả"
+		},
+		"thai-stretch": {
+			"name": "Kéo giãn kiểu Thái",
+			"description": "Kéo giãn linh hoạt và bấm huyệt theo truyền thống chữa lành Thái Lan"
+		},
+		"four-hands-massage": {
+			"name": "Massage bốn tay",
+			"description": "Hai kỹ thuật viên phối hợp nhịp nhàng mang đến trải nghiệm thư giãn sâu đắm chìm"
+		},
+		"bamboo-rolling": {
+			"name": "Lăn tre thư giãn",
+			"description": "Ống tre ấm lăn dọc cơ bắp giúp giảm căng cứng và tăng cường tuần hoàn"
+		},
+		"herbal-compress": {
+			"name": "Chườm thảo dược",
+			"description": "Túi thảo dược hấp nóng chườm dọc cơ thể giúp giảm đau nhức và viêm sưng"
+		},
+		"reflexology": {
+			"name": "Phản xạ học bàn chân",
+			"description": "Bấm huyệt chính xác tại các điểm phản xạ giúp cân bằng và cải thiện tuần hoàn"
+		},
+		"herbal-foot-soak": {
+			"name": "Ngâm chân thảo mộc",
+			"description": "Ngâm chân thảo mộc ấm kết hợp massage chân và bắp chân thư giãn"
+		},
+		"deep-foot-relief": {
+			"name": "Giảm đau chân sâu",
+			"description": "Liệu trình chuyên sâu cho đôi chân mệt mỏi, tập trung vào vòm và gót chân"
+		},
+		"foot-leg-combo": {
+			"name": "Combo chân & chân dưới",
+			"description": "Chăm sóc toàn diện phần thân dưới từ ngón chân đến đầu gối với dầu ấm"
+		},
+		"detox-foot-therapy": {
+			"name": "Detox bàn chân",
+			"description": "Liệu trình thanh lọc bàn chân với bọc than hoạt tính và massage bấm huyệt"
+		},
+		"ginger-foot-wrap": {
+			"name": "Bọc gừng bàn chân",
+			"description": "Bọc bột gừng ấm giúp tăng lưu thông máu và làm ấm bàn chân lạnh"
+		},
+		"salt-scrub-soak": {
+			"name": "Tẩy muối & ngâm chân",
+			"description": "Tẩy da chết bằng muối Himalaya kết hợp ngâm nước ấm giàu khoáng chất"
+		},
+		"plantar-relief": {
+			"name": "Giảm đau gan bàn chân",
+			"description": "Liệu pháp ấn sâu chuyên biệt nhắm vào cân gan chân và đau gót chân"
+		},
+		"signature-wash": {
+			"name": "Gội đầu đặc biệt",
+			"description": "Gội đầu thư giãn kết hợp massage da đầu với sản phẩm thảo mộc cao cấp"
+		},
+		"deep-conditioning": {
+			"name": "Dưỡng tóc sâu",
+			"description": "Liệu trình dưỡng sâu phục hồi độ bóng và sức khỏe cho tóc hư tổn"
+		},
+		"scalp-detox": {
+			"name": "Detox da đầu",
+			"description": "Liệu trình làm sạch sâu loại bỏ cặn bẩn và kích thích mọc tóc"
+		},
+		"hot-oil-treatment": {
+			"name": "Ủ dầu nóng",
+			"description": "Massage dầu dừa ấm lên da đầu và tóc giúp cấp ẩm sâu"
+		},
+		"herbal-rinse": {
+			"name": "Xả thảo mộc",
+			"description": "Xả tóc thảo mộc truyền thống Việt Nam cho mái tóc khỏe mượt óng ả"
+		},
+		"keratin-smooth": {
+			"name": "Keratin làm mượt",
+			"description": "Phủ keratin chuyên nghiệp giúp tóc hết xù và thêm bóng mượt lâu dài"
+		},
+		"charcoal-purify": {
+			"name": "Than hoạt tính thanh lọc",
+			"description": "Thanh lọc bằng than hoạt tính hút sạch tạp chất và làm mới da đầu dầu"
+		},
+		"minty-cool-wash": {
+			"name": "Gội bạc hà mát lạnh",
+			"description": "Gội đầu bạc hà mát lạnh kết hợp massage da đầu mang lại sảng khoái tức thì"
+		},
+		"classic-glow-facial": {
+			"name": "Chăm sóc da cổ điển",
+			"description": "Làm sạch sâu, tẩy da chết và đắp mặt nạ cấp ẩm cho làn da rạng rỡ"
+		},
+		"anti-aging-lift": {
+			"name": "Nâng cơ chống lão hóa",
+			"description": "Liệu trình nâng cơ với collagen và công nghệ vi dòng điện nhẹ nhàng"
+		},
+		"acne-clear": {
+			"name": "Trị mụn chuyên sâu",
+			"description": "Liệu trình trị mụn với axit salicylic và ánh sáng LED xanh làm dịu"
+		},
+		"vitamin-c-brightening": {
+			"name": "Sáng da Vitamin C",
+			"description": "Liệu trình sáng da giúp mờ thâm nám và đều màu da hiệu quả"
+		},
+		"hydra-rescue": {
+			"name": "Cấp ẩm khẩn cấp",
+			"description": "Cấp ẩm chuyên sâu dành cho làn da khô và thiếu nước"
+		},
+		"gold-leaf-luxury": {
+			"name": "Mặt nạ vàng sang trọng",
+			"description": "Mặt nạ vàng nguyên chất giúp tăng độ sáng và thúc đẩy tái tạo tế bào"
+		},
+		"oxygen-boost": {
+			"name": "Thổi oxy tươi trẻ",
+			"description": "Phun oxy áp suất cao giúp da căng mọng và giảm nếp nhăn tức thì"
+		},
+		"sensitive-calm": {
+			"name": "Dịu nhẹ da nhạy cảm",
+			"description": "Liệu trình siêu dịu nhẹ với lô hội và hoa cúc cho da nhạy cảm, dễ đỏ"
+		},
+		"smooth-heel-treatment": {
+			"name": "Làm mềm gót chân",
+			"description": "Tẩy da chết và dưỡng ẩm sâu giúp làm mềm gót chân khô nứt nẻ"
+		},
+		"paraffin-wax-wrap": {
+			"name": "Bọc sáp paraffin",
+			"description": "Bọc sáp paraffin ấm giúp khóa ẩm và phục hồi da khô"
+		},
+		"callus-removal": {
+			"name": "Loại bỏ chai sần",
+			"description": "Loại bỏ chai sần chuyên nghiệp bằng dụng cụ mài nhẹ nhàng"
+		},
+		"heel-repair-mask": {
+			"name": "Mặt nạ phục hồi gót",
+			"description": "Đắp mặt nạ chuyên sâu kiểu ủ qua đêm cho gót chân hư tổn nặng"
+		},
+		"foot-peel-polish": {
+			"name": "Peel & đánh bóng chân",
+			"description": "Peel hóa học giúp lộ da non mịn màng kết hợp kem dưỡng nuôi dưỡng"
+		},
+		"shea-butter-wrap": {
+			"name": "Bọc bơ hạt mỡ",
+			"description": "Bọc bơ hạt mỡ ấm nóng giúp nuôi dưỡng sâu và phục hồi gót chân nứt nẻ"
+		},
+		"pumice-oil-ritual": {
+			"name": "Đá bọt & tinh dầu",
+			"description": "Mài đá bọt truyền thống kết hợp massage tinh dầu ấm thư giãn"
+		},
+		"heel-recovery-plus": {
+			"name": "Phục hồi gót chân cao cấp",
+			"description": "Liệu trình lâm sàng nhiều bước kết hợp peel, mặt nạ và kem khóa ẩm"
+		},
+		"gel-manicure": {
+			"name": "Sơn gel tay",
+			"description": "Sơn gel bền lâu kèm chăm sóc biểu bì và massage tay"
+		},
+		"classic-pedicure": {
+			"name": "Chăm sóc móng chân",
+			"description": "Dũa móng, chăm sóc biểu bì, sơn móng và massage chân trọn gói"
+		},
+		"nail-art-design": {
+			"name": "Vẽ nail nghệ thuật",
+			"description": "Vẽ nail nghệ thuật thủ công với các mẫu thiết kế cao cấp theo yêu cầu"
+		},
+		"acrylic-extensions": {
+			"name": "Đắp móng acrylic",
+			"description": "Đắp móng acrylic chuyên nghiệp với lựa chọn hình dáng và độ dài"
+		},
+		"mani-pedi-combo": {
+			"name": "Combo tay & chân",
+			"description": "Trọn gói chăm sóc móng tay và móng chân với sơn gel hoàn thiện"
+		},
+		"dip-powder-nails": {
+			"name": "Bột nhúng móng",
+			"description": "Bột nhúng bền chắc mang lại vẻ tự nhiên với màu sắc lâu phai"
+		},
+		"nail-repair-strengthen": {
+			"name": "Phục hồi & làm chắc móng",
+			"description": "Phục hồi móng hư tổn với liệu trình protein bond và lớp phủ bảo vệ"
+		},
+		"luxury-hand-spa": {
+			"name": "Spa tay cao cấp",
+			"description": "Chăm sóc tay toàn diện với tẩy da chết, mặt nạ, nhúng paraffin và sơn gel"
+		},
+		"traditional-ear-clean": {
+			"name": "Lấy ráy tai truyền thống",
+			"description": "Lấy ráy tai nhẹ nhàng bằng dụng cụ tre chuyên dụng với thao tác êm ái"
+		},
+		"ear-candling": {
+			"name": "Nến tai trị liệu",
+			"description": "Liệu pháp nến tai toàn diện giúp loại bỏ cặn bẩn và thúc đẩy thư giãn"
+		},
+		"deep-clean-massage": {
+			"name": "Vệ sinh & massage tai",
+			"description": "Vệ sinh tai kỹ lưỡng kết hợp massage tai và thái dương thư giãn"
+		},
+		"ear-acupressure": {
+			"name": "Bấm huyệt tai",
+			"description": "Bấm huyệt tai kích thích các điểm phản xạ giúp giảm căng thẳng và đau đầu"
+		},
+		"premium-ear-spa": {
+			"name": "Spa tai cao cấp",
+			"description": "Chăm sóc tai trọn gói với vệ sinh, massage, chườm ấm và tinh dầu"
+		},
+		"warm-oil-ear-soak": {
+			"name": "Nhỏ dầu ấm tai",
+			"description": "Nhỏ dầu thảo mộc ấm nhẹ nhàng vào ống tai giúp thư giãn sâu dễ chịu"
+		},
+		"asmr-ear-therapy": {
+			"name": "ASMR trị liệu tai",
+			"description": "Dụng cụ siêu nhẹ và chải mềm mang lại cảm giác thư giãn sâu và tê rần dễ chịu"
+		},
+		"ear-scalp-combo": {
+			"name": "Combo tai & da đầu",
+			"description": "Kết hợp lấy ráy tai và massage da đầu sảng khoái cho toàn vùng đầu"
+		},
+		"classic-haircut": {
+			"name": "Cắt tóc cổ điển",
+			"description": "Cắt tóc chỉn chu với tư vấn, gội đầu và tạo kiểu chuyên nghiệp"
+		},
+		"hot-towel-shave": {
+			"name": "Cạo mặt khăn nóng",
+			"description": "Cạo mặt dao thẳng truyền thống với khăn nóng và kem dưỡng sau cạo"
+		},
+		"beard-trim-shape": {
+			"name": "Tỉa & tạo dáng râu",
+			"description": "Chăm sóc râu chuyên nghiệp với tỉa, tạo dáng và dầu dưỡng râu"
+		},
+		"hair-color": {
+			"name": "Nhuộm tóc",
+			"description": "Dịch vụ nhuộm tóc chuyên nghiệp với thuốc nhuộm cao cấp không amoniac"
+		},
+		"cut-shave-combo": {
+			"name": "Combo cắt & cạo",
+			"description": "Trọn gói chăm sóc với cắt tóc, cạo mặt và tạo kiểu hoàn thiện"
+		},
+		"fade-design": {
+			"name": "Fade & thiết kế",
+			"description": "Cắt fade chính xác với tùy chọn vạch kẻ và họa tiết bằng dao cạo"
+		},
+		"grey-blend-camo": {
+			"name": "Phủ tóc bạc tự nhiên",
+			"description": "Phủ tóc bạc tự nhiên hòa quyện hoàn hảo với màu tóc hiện có"
+		},
+		"scalp-treatment": {
+			"name": "Chăm sóc da đầu",
+			"description": "Liệu trình làm sạch da đầu sâu với tẩy tế bào chết và serum phục hồi"
+		},
+		"royal-treatment": {
+			"name": "Trải nghiệm hoàng gia",
+			"description": "Trải nghiệm toàn thân ba giờ với massage, chăm sóc da mặt và chân"
+		},
+		"couples-retreat": {
+			"name": "Gói đôi lãng mạn",
+			"description": "Liệu trình spa song đôi với champagne và phòng riêng tư"
+		},
+		"executive-refresh": {
+			"name": "Gói làm mới nhanh",
+			"description": "Gói nhanh chín mươi phút với massage, chăm sóc da mặt và gội đầu"
+		},
+		"full-day-escape": {
+			"name": "Trải nghiệm trọn ngày",
+			"description": "Hành trình trọn vẹn năm giờ trải nghiệm mọi dịch vụ spa chúng tôi có"
+		},
+		"birthday-special": {
+			"name": "Gói sinh nhật",
+			"description": "Gói tiệc sinh nhật với bánh kem, trang trí và các dịch vụ spa cao cấp"
+		},
+		"bridal-glow-package": {
+			"name": "Gói cô dâu rạng rỡ",
+			"description": "Chuẩn bị trước đám cưới với chăm sóc da mặt, tẩy da body, làm móng và tạo kiểu tóc"
+		},
+		"corporate-wellness": {
+			"name": "Gói doanh nghiệp",
+			"description": "Đặt chỗ nhóm cho doanh nghiệp với massage, chăm sóc chân và đồ uống kèm theo"
+		},
+		"monthly-membership": {
+			"name": "Hội viên hàng tháng",
+			"description": "Bốn lần trải nghiệm cao cấp mỗi tháng với ưu tiên đặt lịch và giảm mười phần trăm"
+		}
+	}
+}

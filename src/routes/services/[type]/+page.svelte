@@ -1,145 +1,27 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { ordersByCategory, type ServiceSelection, type DurationOption } from '$lib/orderStore';
+	import { ordersByCategory, type ServiceSelection } from '$lib/orderStore';
 	import { base } from '$app/paths';
 	import { t } from '$lib/i18n';
+	import PageHeader from '$lib/components/PageHeader.svelte';
+	import { catalog, type CatalogCategory } from '$lib/data/catalog';
 
-	interface Category {
-		name: string;
-		id: string;
-		min: number;
-	}
-
-	let categories = $derived<Category[]>([
-		{ name: $t('category.body-massage'), id: 'body-massage', min: 60 },
-		{ name: $t('category.foot-massage'), id: 'foot-massage', min: 45 },
-		{ name: $t('category.hair-wash'), id: 'hair-wash', min: 30 },
-		{ name: $t('category.facial'), id: 'facial', min: 45 },
-		{ name: $t('category.heel-care'), id: 'heel-care', min: 30 },
-		{ name: $t('category.nails'), id: 'nails', min: 40 },
-		{ name: $t('category.ear-clean'), id: 'ear-clean', min: 20 },
-		{ name: $t('category.barber'), id: 'barber', min: 30 },
-		{ name: $t('category.vip-pack'), id: 'vip-pack', min: 120 }
-	]);
-
-	function buildDurations(basePrice: number): DurationOption[] {
-		const round = (n: number) => Math.round(n / 10000) * 10000;
-		return [
-			{ minutes: 45, label: '45 min', priceVND: basePrice },
-			{ minutes: 60, label: '60 min', priceVND: round(basePrice * 1.3) },
-			{ minutes: 70, label: '70 min', priceVND: round(basePrice * 1.5) },
-			{ minutes: 90, label: '90 min', priceVND: round(basePrice * 1.85) },
-		];
-	}
-
-	const serviceCatalog: Record<string, { name: string; durations: DurationOption[] }[]> = {
-		'body-massage': [
-			{ name: 'Traditional Vietnamese', durations: buildDurations(450000) },
-			{ name: 'Deep Tissue', durations: buildDurations(550000) },
-			{ name: 'Aromatherapy Bliss', durations: buildDurations(500000) },
-			{ name: 'Hot Stone Therapy', durations: buildDurations(650000) },
-			{ name: 'Thai Stretch', durations: buildDurations(500000) },
-			{ name: 'Four Hands Massage', durations: buildDurations(800000) },
-			{ name: 'Bamboo Rolling', durations: buildDurations(580000) },
-			{ name: 'Herbal Compress', durations: buildDurations(520000) }
-		],
-		'foot-massage': [
-			{ name: 'Reflexology', durations: buildDurations(350000) },
-			{ name: 'Herbal Foot Soak', durations: buildDurations(300000) },
-			{ name: 'Deep Foot Relief', durations: buildDurations(400000) },
-			{ name: 'Foot & Leg Combo', durations: buildDurations(450000) },
-			{ name: 'Detox Foot Therapy', durations: buildDurations(380000) },
-			{ name: 'Ginger Foot Wrap', durations: buildDurations(320000) },
-			{ name: 'Salt Scrub & Soak', durations: buildDurations(360000) },
-			{ name: 'Plantar Relief', durations: buildDurations(420000) }
-		],
-		'hair-wash': [
-			{ name: 'Signature Wash', durations: buildDurations(200000) },
-			{ name: 'Deep Conditioning', durations: buildDurations(300000) },
-			{ name: 'Scalp Detox', durations: buildDurations(350000) },
-			{ name: 'Hot Oil Treatment', durations: buildDurations(280000) },
-			{ name: 'Herbal Rinse', durations: buildDurations(250000) },
-			{ name: 'Keratin Smooth', durations: buildDurations(400000) },
-			{ name: 'Charcoal Purify', durations: buildDurations(320000) },
-			{ name: 'Minty Cool Wash', durations: buildDurations(230000) }
-		],
-		'facial': [
-			{ name: 'Classic Glow Facial', durations: buildDurations(400000) },
-			{ name: 'Anti-Aging Lift', durations: buildDurations(600000) },
-			{ name: 'Acne Clear', durations: buildDurations(450000) },
-			{ name: 'Vitamin C Brightening', durations: buildDurations(500000) },
-			{ name: 'Hydra Rescue', durations: buildDurations(420000) },
-			{ name: 'Gold Leaf Luxury', durations: buildDurations(750000) },
-			{ name: 'Oxygen Boost', durations: buildDurations(550000) },
-			{ name: 'Sensitive Calm', durations: buildDurations(430000) }
-		],
-		'heel-care': [
-			{ name: 'Smooth Heel Treatment', durations: buildDurations(250000) },
-			{ name: 'Paraffin Wax Wrap', durations: buildDurations(300000) },
-			{ name: 'Callus Removal', durations: buildDurations(200000) },
-			{ name: 'Heel Repair Mask', durations: buildDurations(280000) },
-			{ name: 'Foot Peel & Polish', durations: buildDurations(320000) },
-			{ name: 'Shea Butter Wrap', durations: buildDurations(270000) },
-			{ name: 'Pumice & Oil Ritual', durations: buildDurations(220000) },
-			{ name: 'Heel Recovery Plus', durations: buildDurations(380000) }
-		],
-		'nails': [
-			{ name: 'Gel Manicure', durations: buildDurations(300000) },
-			{ name: 'Classic Pedicure', durations: buildDurations(250000) },
-			{ name: 'Nail Art Design', durations: buildDurations(400000) },
-			{ name: 'Acrylic Extensions', durations: buildDurations(500000) },
-			{ name: 'Mani-Pedi Combo', durations: buildDurations(450000) },
-			{ name: 'Dip Powder Nails', durations: buildDurations(350000) },
-			{ name: 'Nail Repair & Strengthen', durations: buildDurations(280000) },
-			{ name: 'Luxury Hand Spa', durations: buildDurations(550000) }
-		],
-		'ear-clean': [
-			{ name: 'Traditional Ear Clean', durations: buildDurations(150000) },
-			{ name: 'Ear Candling', durations: buildDurations(200000) },
-			{ name: 'Deep Clean & Massage', durations: buildDurations(250000) },
-			{ name: 'Ear Acupressure', durations: buildDurations(180000) },
-			{ name: 'Premium Ear Spa', durations: buildDurations(300000) },
-			{ name: 'Warm Oil Ear Soak', durations: buildDurations(220000) },
-			{ name: 'ASMR Ear Therapy', durations: buildDurations(280000) },
-			{ name: 'Ear & Scalp Combo', durations: buildDurations(350000) }
-		],
-		'barber': [
-			{ name: 'Classic Haircut', durations: buildDurations(200000) },
-			{ name: 'Hot Towel Shave', durations: buildDurations(250000) },
-			{ name: 'Beard Trim & Shape', durations: buildDurations(150000) },
-			{ name: 'Hair Color', durations: buildDurations(400000) },
-			{ name: 'Cut & Shave Combo', durations: buildDurations(350000) },
-			{ name: 'Fade & Design', durations: buildDurations(280000) },
-			{ name: 'Grey Blend Camo', durations: buildDurations(350000) },
-			{ name: 'Scalp Treatment', durations: buildDurations(300000) }
-		],
-		'vip-pack': [
-			{ name: 'Royal Treatment', durations: buildDurations(1500000) },
-			{ name: 'Couples Retreat', durations: buildDurations(2500000) },
-			{ name: 'Executive Refresh', durations: buildDurations(900000) },
-			{ name: 'Full Day Escape', durations: buildDurations(3000000) },
-			{ name: 'Birthday Special', durations: buildDurations(2000000) },
-			{ name: 'Bridal Glow Package', durations: buildDurations(3500000) },
-			{ name: 'Corporate Wellness', durations: buildDurations(1800000) },
-			{ name: 'Monthly Membership', durations: buildDurations(4000000) }
-		]
-	};
+	let categories = $derived($catalog.categories);
 
 	const VND_TO_USD = 25000;
 
 	let visible = $state(false);
 	let serviceType = $derived($page.params.type ?? '');
-	let displayType = $derived(serviceType.charAt(0).toUpperCase() + serviceType.slice(1));
 
 	function computeTotal(orders: Record<string, Map<string, ServiceSelection>>): { totalVND: number; totalCount: number } {
 		let totalVND = 0;
 		let totalCount = 0;
 		for (const [catId, selections] of Object.entries(orders)) {
-			const catalog = serviceCatalog[catId];
-			if (!catalog) continue;
-			for (const [name, sel] of selections) {
-				const service = catalog.find(s => s.name === name);
+			const cat = categories.find((c: CatalogCategory) => c.id === catId);
+			if (!cat) continue;
+			for (const [id, sel] of selections) {
+				const service = cat.services.find(s => s.id === id);
 				if (service) {
 					const dur = service.durations.find(d => d.minutes === sel.minutes);
 					if (dur) totalVND += dur.priceVND;
@@ -180,10 +62,7 @@
 
 <main>
 	<div class="page" class:visible>
-		<div class="header">
-			<h1 class="title">{$t('category.title')}</h1>
-			<div class="divider"></div>
-		</div>
+		<PageHeader title={$t('category.title')} />
 
 		<div class="categories-grid">
 			{#each categories as cat}
@@ -310,19 +189,6 @@
 </main>
 
 <style>
-	:global(*) {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
-
-	:global(body) {
-		background: #0f0f0f;
-		color: #e8e0d6;
-		font-family: 'Inter', -apple-system, sans-serif;
-		overflow-x: hidden;
-	}
-
 	main {
 		min-height: 100vh;
 		display: flex;
@@ -346,39 +212,6 @@
 
 	.page.visible {
 		opacity: 1;
-	}
-
-	.header {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 10;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 16px;
-		padding: 32px 24px 20px;
-	}
-
-	.title {
-		font-family: 'Playfair Display', serif;
-		font-size: clamp(1.8rem, 5vw, 2.8rem);
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		color: #c19a6b;
-		text-align: center;
-	}
-
-	.divider {
-		height: 1px;
-		background: linear-gradient(90deg, transparent, #c19a6b, transparent);
-		animation: divider-breathe 16s ease-in-out infinite;
-	}
-
-	@keyframes divider-breathe {
-		0%, 100% { width: 150px; }
-		50% { width: 200px; }
 	}
 
 	.categories-grid {

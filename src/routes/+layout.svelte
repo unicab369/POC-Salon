@@ -53,6 +53,19 @@
 {@render children()}
 
 <style>
+	:global(*) {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	:global(body) {
+		background: #0f0f0f;
+		color: #e8e0d6;
+		font-family: 'Inter', -apple-system, sans-serif;
+		overflow-x: hidden;
+	}
+
 	/* Milky Way */
 	.warm-tint {
 		position: fixed;

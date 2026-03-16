@@ -2,34 +2,15 @@
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import { t } from '$lib/i18n';
+	import PageHeader from '$lib/components/PageHeader.svelte';
+	import { catalog } from '$lib/data/catalog';
 
-	interface ServiceItem {
-		title: string;
-		description: string;
-		id: string;
-		href: string;
-	}
-
-	let services = $derived<ServiceItem[]>([
-		{
-			title: $t('services.standard'),
-			description: $t('services.standard.desc'),
-			id: 'standard',
-			href: `${base}/services/standard`
-		},
-		{
-			title: $t('services.premium'),
-			description: $t('services.premium.desc'),
-			id: 'premium',
-			href: `${base}/services/premium`
-		},
-		{
-			title: $t('services.homespa'),
-			description: $t('services.homespa.desc'),
-			id: 'homespa',
-			href: `${base}/services/homespa`
-		}
-	]);
+	let services = $derived($catalog.experiences.map(exp => ({
+		title: exp.title,
+		description: exp.description,
+		id: exp.id,
+		href: `${base}/services/${exp.id}`
+	})));
 
 	let visible = $state(false);
 
@@ -46,10 +27,7 @@
 
 <main>
 	<div class="page" class:visible>
-		<div class="header">
-			<h1 class="title">{$t('services.title')}</h1>
-			<div class="divider"></div>
-		</div>
+		<PageHeader title={$t('services.title')} />
 
 		<div class="services-grid">
 			{#each services as service}
@@ -90,19 +68,6 @@
 </main>
 
 <style>
-	:global(*) {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
-
-	:global(body) {
-		background: #0f0f0f;
-		color: #e8e0d6;
-		font-family: 'Inter', -apple-system, sans-serif;
-		overflow-x: hidden;
-	}
-
 	main {
 		height: 100vh;
 		display: flex;
@@ -158,39 +123,6 @@
 		color: #c19a6b;
 		border-color: rgba(193,154,107,0.4);
 		background: rgba(193,154,107,0.06);
-	}
-
-	.header {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 10;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 16px;
-		padding: 32px 24px 20px;
-	}
-
-	.title {
-		font-family: 'Playfair Display', serif;
-		font-size: clamp(1.8rem, 5vw, 2.8rem);
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		color: #c19a6b;
-		text-align: center;
-	}
-
-	.divider {
-		height: 1px;
-		background: linear-gradient(90deg, transparent, #c19a6b, transparent);
-		animation: divider-breathe 16s ease-in-out infinite;
-	}
-
-	@keyframes divider-breathe {
-		0%, 100% { width: 150px; }
-		50% { width: 200px; }
 	}
 
 	.services-grid {

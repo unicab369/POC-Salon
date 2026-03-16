@@ -1,0 +1,308 @@
+{
+	"experiences": {
+		"standard": { "title": "Standard", "description": "Random Staff & Room" },
+		"premium": { "title": "Premium", "description": "Design Your Own Journey" },
+		"homespa": { "title": "Homespa", "description": "Spa at Your Place" }
+	},
+	"categories": {
+		"body-massage": "Body Massage",
+		"foot-massage": "Foot Massage",
+		"hair-wash": "Hair Wash",
+		"facial": "Facial",
+		"heel-care": "Heel Care",
+		"nails": "Nails",
+		"ear-clean": "Ear Clean",
+		"barber": "Barber",
+		"vip-pack": "VIP Pack"
+	},
+	"services": {
+		"traditional-vietnamese": {
+			"name": "Traditional Vietnamese",
+			"description": "Full body relaxation using ancient Vietnamese techniques with warm herbal oils"
+		},
+		"deep-tissue": {
+			"name": "Deep Tissue",
+			"description": "Intense pressure targeting deep muscle layers to release chronic tension"
+		},
+		"aromatherapy-bliss": {
+			"name": "Aromatherapy Bliss",
+			"description": "Gentle strokes combined with premium essential oils for total mind-body harmony"
+		},
+		"hot-stone-therapy": {
+			"name": "Hot Stone Therapy",
+			"description": "Heated basalt stones placed along energy points to melt away stress"
+		},
+		"thai-stretch": {
+			"name": "Thai Stretch",
+			"description": "Dynamic stretching and pressure point work inspired by Thai healing traditions"
+		},
+		"four-hands-massage": {
+			"name": "Four Hands Massage",
+			"description": "Two therapists work in synchronized rhythm for a deeply immersive experience"
+		},
+		"bamboo-rolling": {
+			"name": "Bamboo Rolling",
+			"description": "Warm bamboo sticks rolled along muscles to ease tension and boost circulation"
+		},
+		"herbal-compress": {
+			"name": "Herbal Compress",
+			"description": "Steamed herbal poultice pressed along the body to soothe aches and inflammation"
+		},
+		"reflexology": {
+			"name": "Reflexology",
+			"description": "Targeted pressure on reflex points to restore balance and improve circulation"
+		},
+		"herbal-foot-soak": {
+			"name": "Herbal Foot Soak",
+			"description": "Warm herbal bath followed by a soothing foot and calf massage"
+		},
+		"deep-foot-relief": {
+			"name": "Deep Foot Relief",
+			"description": "Intensive treatment for tired feet focusing on arches and heels"
+		},
+		"foot-leg-combo": {
+			"name": "Foot & Leg Combo",
+			"description": "Complete lower body treatment from toes to knees with warm oil"
+		},
+		"detox-foot-therapy": {
+			"name": "Detox Foot Therapy",
+			"description": "Cleansing foot treatment with charcoal wrap and pressure point massage"
+		},
+		"ginger-foot-wrap": {
+			"name": "Ginger Foot Wrap",
+			"description": "Warming ginger paste wrap to improve blood flow and relieve cold feet"
+		},
+		"salt-scrub-soak": {
+			"name": "Salt Scrub & Soak",
+			"description": "Himalayan salt exfoliation followed by mineral-rich warm water soak"
+		},
+		"plantar-relief": {
+			"name": "Plantar Relief",
+			"description": "Specialized deep pressure therapy targeting plantar fascia and heel pain"
+		},
+		"signature-wash": {
+			"name": "Signature Wash",
+			"description": "Relaxing shampoo with scalp massage using premium herbal products"
+		},
+		"deep-conditioning": {
+			"name": "Deep Conditioning",
+			"description": "Nourishing treatment to restore shine and strength to damaged hair"
+		},
+		"scalp-detox": {
+			"name": "Scalp Detox",
+			"description": "Deep cleansing treatment to remove buildup and stimulate hair growth"
+		},
+		"hot-oil-treatment": {
+			"name": "Hot Oil Treatment",
+			"description": "Warm coconut oil massage into scalp and hair for deep hydration"
+		},
+		"herbal-rinse": {
+			"name": "Herbal Rinse",
+			"description": "Traditional Vietnamese herb-infused rinse for healthy glossy hair"
+		},
+		"keratin-smooth": {
+			"name": "Keratin Smooth",
+			"description": "Professional keratin infusion to tame frizz and add lasting silky shine"
+		},
+		"charcoal-purify": {
+			"name": "Charcoal Purify",
+			"description": "Activated charcoal cleanse to draw out impurities and refresh oily scalps"
+		},
+		"minty-cool-wash": {
+			"name": "Minty Cool Wash",
+			"description": "Peppermint-infused shampoo with cooling scalp massage for instant freshness"
+		},
+		"classic-glow-facial": {
+			"name": "Classic Glow Facial",
+			"description": "Deep cleansing, exfoliation and hydrating mask for radiant skin"
+		},
+		"anti-aging-lift": {
+			"name": "Anti-Aging Lift",
+			"description": "Firming treatment with collagen boost and gentle micro-current therapy"
+		},
+		"acne-clear": {
+			"name": "Acne Clear",
+			"description": "Purifying treatment with salicylic acid and calming blue LED light"
+		},
+		"vitamin-c-brightening": {
+			"name": "Vitamin C Brightening",
+			"description": "Luminous treatment to fade dark spots and even out skin tone"
+		},
+		"hydra-rescue": {
+			"name": "Hydra Rescue",
+			"description": "Intensive moisture infusion for dry and dehydrated skin types"
+		},
+		"gold-leaf-luxury": {
+			"name": "Gold Leaf Luxury",
+			"description": "Pure gold leaf mask to boost radiance and promote cellular renewal"
+		},
+		"oxygen-boost": {
+			"name": "Oxygen Boost",
+			"description": "High-pressure oxygen spray to plump skin and reduce fine lines instantly"
+		},
+		"sensitive-calm": {
+			"name": "Sensitive Calm",
+			"description": "Ultra-gentle treatment with aloe and chamomile for reactive and redness-prone skin"
+		},
+		"smooth-heel-treatment": {
+			"name": "Smooth Heel Treatment",
+			"description": "Exfoliation and deep moisturizing to soften rough cracked heels"
+		},
+		"paraffin-wax-wrap": {
+			"name": "Paraffin Wax Wrap",
+			"description": "Warm paraffin coating to lock in moisture and heal dry skin"
+		},
+		"callus-removal": {
+			"name": "Callus Removal",
+			"description": "Professional removal of hardened skin with gentle buffing tools"
+		},
+		"heel-repair-mask": {
+			"name": "Heel Repair Mask",
+			"description": "Overnight-style intensive mask treatment for severely damaged heels"
+		},
+		"foot-peel-polish": {
+			"name": "Foot Peel & Polish",
+			"description": "Chemical peel to reveal baby-soft skin followed by nourishing cream"
+		},
+		"shea-butter-wrap": {
+			"name": "Shea Butter Wrap",
+			"description": "Rich shea butter heated wrap to deeply nourish and restore cracked heels"
+		},
+		"pumice-oil-ritual": {
+			"name": "Pumice & Oil Ritual",
+			"description": "Traditional pumice stone buffing followed by warm essential oil massage"
+		},
+		"heel-recovery-plus": {
+			"name": "Heel Recovery Plus",
+			"description": "Multi-step clinical treatment combining peel, mask and sealing balm"
+		},
+		"gel-manicure": {
+			"name": "Gel Manicure",
+			"description": "Long-lasting gel polish with cuticle care and hand massage"
+		},
+		"classic-pedicure": {
+			"name": "Classic Pedicure",
+			"description": "Full nail shaping, cuticle treatment, polish and foot massage"
+		},
+		"nail-art-design": {
+			"name": "Nail Art Design",
+			"description": "Custom hand-painted nail art with premium designs of your choice"
+		},
+		"acrylic-extensions": {
+			"name": "Acrylic Extensions",
+			"description": "Professional acrylic nail extensions with shape and length options"
+		},
+		"mani-pedi-combo": {
+			"name": "Mani-Pedi Combo",
+			"description": "Complete manicure and pedicure package with gel polish finish"
+		},
+		"dip-powder-nails": {
+			"name": "Dip Powder Nails",
+			"description": "Durable dip powder application for a natural look with lasting color"
+		},
+		"nail-repair-strengthen": {
+			"name": "Nail Repair & Strengthen",
+			"description": "Damaged nail restoration with protein bond treatment and protective coat"
+		},
+		"luxury-hand-spa": {
+			"name": "Luxury Hand Spa",
+			"description": "Full hand treatment with scrub, mask, paraffin dip and gel polish finish"
+		},
+		"traditional-ear-clean": {
+			"name": "Traditional Ear Clean",
+			"description": "Gentle ear cleaning with specialized bamboo tools and soft touch"
+		},
+		"ear-candling": {
+			"name": "Ear Candling",
+			"description": "Holistic ear candling therapy to remove buildup and promote relaxation"
+		},
+		"deep-clean-massage": {
+			"name": "Deep Clean & Massage",
+			"description": "Thorough cleaning followed by soothing ear and temple massage"
+		},
+		"ear-acupressure": {
+			"name": "Ear Acupressure",
+			"description": "Pressure point stimulation on the ear to relieve stress and headaches"
+		},
+		"premium-ear-spa": {
+			"name": "Premium Ear Spa",
+			"description": "Full ear treatment with cleaning, massage, warm compress and oils"
+		},
+		"warm-oil-ear-soak": {
+			"name": "Warm Oil Ear Soak",
+			"description": "Gentle warm herbal oil dripped into the ear canal for deep soothing relief"
+		},
+		"asmr-ear-therapy": {
+			"name": "ASMR Ear Therapy",
+			"description": "Feather-light tools and soft brushing designed for deep relaxation and tingles"
+		},
+		"ear-scalp-combo": {
+			"name": "Ear & Scalp Combo",
+			"description": "Combined ear cleaning with invigorating scalp massage for full head relaxation"
+		},
+		"classic-haircut": {
+			"name": "Classic Haircut",
+			"description": "Precision cut with consultation, wash, and professional styling"
+		},
+		"hot-towel-shave": {
+			"name": "Hot Towel Shave",
+			"description": "Traditional straight razor shave with hot towel and aftershave balm"
+		},
+		"beard-trim-shape": {
+			"name": "Beard Trim & Shape",
+			"description": "Expert beard grooming with trimming, shaping and conditioning oil"
+		},
+		"hair-color": {
+			"name": "Hair Color",
+			"description": "Professional hair coloring service with premium ammonia-free dyes"
+		},
+		"cut-shave-combo": {
+			"name": "Cut & Shave Combo",
+			"description": "Complete grooming package with haircut, shave and styling finish"
+		},
+		"fade-design": {
+			"name": "Fade & Design",
+			"description": "Precision skin fade with optional razor line designs and patterns"
+		},
+		"grey-blend-camo": {
+			"name": "Grey Blend Camo",
+			"description": "Natural-looking grey coverage blended seamlessly into existing hair color"
+		},
+		"scalp-treatment": {
+			"name": "Scalp Treatment",
+			"description": "Deep cleansing scalp therapy with exfoliation and revitalizing serum"
+		},
+		"royal-treatment": {
+			"name": "Royal Treatment",
+			"description": "Three-hour full body experience with massage, facial and foot care"
+		},
+		"couples-retreat": {
+			"name": "Couples Retreat",
+			"description": "Side-by-side spa session for two with champagne and private room"
+		},
+		"executive-refresh": {
+			"name": "Executive Refresh",
+			"description": "Quick ninety-minute package with massage, facial and hair wash"
+		},
+		"full-day-escape": {
+			"name": "Full Day Escape",
+			"description": "All-inclusive five-hour journey through every spa service we offer"
+		},
+		"birthday-special": {
+			"name": "Birthday Special",
+			"description": "Celebration package with cake, decorations and premium spa services"
+		},
+		"bridal-glow-package": {
+			"name": "Bridal Glow Package",
+			"description": "Pre-wedding prep with facial, body scrub, mani-pedi and hair styling"
+		},
+		"corporate-wellness": {
+			"name": "Corporate Wellness",
+			"description": "Group booking for teams with massage, foot care and refreshments included"
+		},
+		"monthly-membership": {
+			"name": "Monthly Membership",
+			"description": "Four premium visits per month with priority booking and ten percent savings"
+		}
+	}
+}

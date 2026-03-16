@@ -1,0 +1,110 @@
+{
+	"experiences": [
+		{ "id": "standard" },
+		{ "id": "premium" },
+		{ "id": "homespa" }
+	],
+	"categories": [
+		{ "id": "body-massage", "minMinutes": 60 },
+		{ "id": "foot-massage", "minMinutes": 45 },
+		{ "id": "hair-wash", "minMinutes": 30 },
+		{ "id": "facial", "minMinutes": 45 },
+		{ "id": "heel-care", "minMinutes": 30 },
+		{ "id": "nails", "minMinutes": 40 },
+		{ "id": "ear-clean", "minMinutes": 20 },
+		{ "id": "barber", "minMinutes": 30 },
+		{ "id": "vip-pack", "minMinutes": 120 }
+	],
+	"services": {
+		"body-massage": [
+			{ "id": "traditional-vietnamese", "basePrice": 450000, "bestSeller": true },
+			{ "id": "deep-tissue", "basePrice": 550000 },
+			{ "id": "aromatherapy-bliss", "basePrice": 500000 },
+			{ "id": "hot-stone-therapy", "basePrice": 650000 },
+			{ "id": "thai-stretch", "basePrice": 500000 },
+			{ "id": "four-hands-massage", "basePrice": 800000 },
+			{ "id": "bamboo-rolling", "basePrice": 580000 },
+			{ "id": "herbal-compress", "basePrice": 520000 }
+		],
+		"foot-massage": [
+			{ "id": "reflexology", "basePrice": 350000, "bestSeller": true },
+			{ "id": "herbal-foot-soak", "basePrice": 300000 },
+			{ "id": "deep-foot-relief", "basePrice": 400000 },
+			{ "id": "foot-leg-combo", "basePrice": 450000 },
+			{ "id": "detox-foot-therapy", "basePrice": 380000 },
+			{ "id": "ginger-foot-wrap", "basePrice": 320000 },
+			{ "id": "salt-scrub-soak", "basePrice": 360000 },
+			{ "id": "plantar-relief", "basePrice": 420000 }
+		],
+		"hair-wash": [
+			{ "id": "signature-wash", "basePrice": 200000, "bestSeller": true },
+			{ "id": "deep-conditioning", "basePrice": 300000 },
+			{ "id": "scalp-detox", "basePrice": 350000 },
+			{ "id": "hot-oil-treatment", "basePrice": 280000 },
+			{ "id": "herbal-rinse", "basePrice": 250000 },
+			{ "id": "keratin-smooth", "basePrice": 400000 },
+			{ "id": "charcoal-purify", "basePrice": 320000 },
+			{ "id": "minty-cool-wash", "basePrice": 230000 }
+		],
+		"facial": [
+			{ "id": "classic-glow-facial", "basePrice": 400000, "bestSeller": true },
+			{ "id": "anti-aging-lift", "basePrice": 600000 },
+			{ "id": "acne-clear", "basePrice": 450000 },
+			{ "id": "vitamin-c-brightening", "basePrice": 500000 },
+			{ "id": "hydra-rescue", "basePrice": 420000 },
+			{ "id": "gold-leaf-luxury", "basePrice": 750000 },
+			{ "id": "oxygen-boost", "basePrice": 550000 },
+			{ "id": "sensitive-calm", "basePrice": 430000 }
+		],
+		"heel-care": [
+			{ "id": "smooth-heel-treatment", "basePrice": 250000, "bestSeller": true },
+			{ "id": "paraffin-wax-wrap", "basePrice": 300000 },
+			{ "id": "callus-removal", "basePrice": 200000 },
+			{ "id": "heel-repair-mask", "basePrice": 280000 },
+			{ "id": "foot-peel-polish", "basePrice": 320000 },
+			{ "id": "shea-butter-wrap", "basePrice": 270000 },
+			{ "id": "pumice-oil-ritual", "basePrice": 220000 },
+			{ "id": "heel-recovery-plus", "basePrice": 380000 }
+		],
+		"nails": [
+			{ "id": "gel-manicure", "basePrice": 300000, "bestSeller": true },
+			{ "id": "classic-pedicure", "basePrice": 250000 },
+			{ "id": "nail-art-design", "basePrice": 400000 },
+			{ "id": "acrylic-extensions", "basePrice": 500000 },
+			{ "id": "mani-pedi-combo", "basePrice": 450000 },
+			{ "id": "dip-powder-nails", "basePrice": 350000 },
+			{ "id": "nail-repair-strengthen", "basePrice": 280000 },
+			{ "id": "luxury-hand-spa", "basePrice": 550000 }
+		],
+		"ear-clean": [
+			{ "id": "traditional-ear-clean", "basePrice": 150000, "bestSeller": true },
+			{ "id": "ear-candling", "basePrice": 200000 },
+			{ "id": "deep-clean-massage", "basePrice": 250000 },
+			{ "id": "ear-acupressure", "basePrice": 180000 },
+			{ "id": "premium-ear-spa", "basePrice": 300000 },
+			{ "id": "warm-oil-ear-soak", "basePrice": 220000 },
+			{ "id": "asmr-ear-therapy", "basePrice": 280000 },
+			{ "id": "ear-scalp-combo", "basePrice": 350000 }
+		],
+		"barber": [
+			{ "id": "classic-haircut", "basePrice": 200000, "bestSeller": true },
+			{ "id": "hot-towel-shave", "basePrice": 250000 },
+			{ "id": "beard-trim-shape", "basePrice": 150000 },
+			{ "id": "hair-color", "basePrice": 400000 },
+			{ "id": "cut-shave-combo", "basePrice": 350000 },
+			{ "id": "fade-design", "basePrice": 280000 },
+			{ "id": "grey-blend-camo", "basePrice": 350000 },
+			{ "id": "scalp-treatment", "basePrice": 300000 }
+		],
+		"vip-pack": [
+			{ "id": "royal-treatment", "basePrice": 1500000, "bestSeller": true },
+			{ "id": "couples-retreat", "basePrice": 2500000 },
+			{ "id": "executive-refresh", "basePrice": 900000 },
+			{ "id": "full-day-escape", "basePrice": 3000000 },
+			{ "id": "birthday-special", "basePrice": 2000000 },
+			{ "id": "bridal-glow-package", "basePrice": 3500000 },
+			{ "id": "corporate-wellness", "basePrice": 1800000 },
+			{ "id": "monthly-membership", "basePrice": 4000000 }
+		]
+	}
+}

@@ -1,0 +1,308 @@
+{
+	"experiences": {
+		"standard": { "title": "スタンダード", "description": "ランダムなスタッフ＆ルーム" },
+		"premium": { "title": "プレミアム", "description": "自分だけの旅をデザイン" },
+		"homespa": { "title": "ホームスパ", "description": "ご自宅でスパ" }
+	},
+	"categories": {
+		"body-massage": "ボディマッサージ",
+		"foot-massage": "フットマッサージ",
+		"hair-wash": "ヘアウォッシュ",
+		"facial": "フェイシャル",
+		"heel-care": "かかとケア",
+		"nails": "ネイル",
+		"ear-clean": "耳掃除",
+		"barber": "バーバー",
+		"vip-pack": "VIPパック"
+	},
+	"services": {
+		"traditional-vietnamese": {
+			"name": "ベトナム伝統マッサージ",
+			"description": "温かいハーブオイルを使ったベトナム伝統技法による全身リラクゼーション"
+		},
+		"deep-tissue": {
+			"name": "ディープティシュー",
+			"description": "深層筋肉に強い圧をかけ、慢性的な緊張をほぐすマッサージ"
+		},
+		"aromatherapy-bliss": {
+			"name": "アロマテラピーブリス",
+			"description": "プレミアムエッセンシャルオイルと優しいストロークで心身の調和を実現"
+		},
+		"hot-stone-therapy": {
+			"name": "ホットストーンセラピー",
+			"description": "温めた玄武岩をエネルギーポイントに置き、ストレスを溶かすセラピー"
+		},
+		"thai-stretch": {
+			"name": "タイストレッチ",
+			"description": "タイ伝統ヒーリングに基づくダイナミックなストレッチと指圧施術"
+		},
+		"four-hands-massage": {
+			"name": "フォーハンドマッサージ",
+			"description": "二人のセラピストがシンクロしたリズムで深い没入感を与えるマッサージ"
+		},
+		"bamboo-rolling": {
+			"name": "バンブーローリング",
+			"description": "温かい竹スティックを筋肉に沿って転がし、緊張を和らげ血行を促進"
+		},
+		"herbal-compress": {
+			"name": "ハーバルコンプレス",
+			"description": "蒸したハーブの湿布を体に押し当て、痛みや炎症を鎮めるトリートメント"
+		},
+		"reflexology": {
+			"name": "リフレクソロジー",
+			"description": "反射区を的確に刺激し、体のバランスを整え血行を改善する施術"
+		},
+		"herbal-foot-soak": {
+			"name": "ハーブ足浴",
+			"description": "温かいハーブ足浴の後、足とふくらはぎを心地よくマッサージ"
+		},
+		"deep-foot-relief": {
+			"name": "ディープフットリリーフ",
+			"description": "疲れた足のアーチとかかとを集中ケアするリカバリートリートメント"
+		},
+		"foot-leg-combo": {
+			"name": "フット＆レッグコンボ",
+			"description": "温かいオイルでつま先から膝まで下半身全体をケアするコース"
+		},
+		"detox-foot-therapy": {
+			"name": "デトックスフットセラピー",
+			"description": "チャコールラップと指圧マッサージで足のデトックスを促すクレンジングケア"
+		},
+		"ginger-foot-wrap": {
+			"name": "ジンジャーフットラップ",
+			"description": "温かいジンジャーペーストラップで血行を改善し、冷え性を緩和"
+		},
+		"salt-scrub-soak": {
+			"name": "ソルトスクラブ＆ソーク",
+			"description": "ヒマラヤ岩塩で角質を除去した後、ミネラル豊富な温水で足浴"
+		},
+		"plantar-relief": {
+			"name": "足底リリーフ",
+			"description": "足底筋膜とかかとの痛みを集中的にケアする専門ディーププレッシャー施術"
+		},
+		"signature-wash": {
+			"name": "シグネチャーウォッシュ",
+			"description": "プレミアムハーブ製品を使った頭皮マッサージ付きリラクシングシャンプー"
+		},
+		"deep-conditioning": {
+			"name": "ディープコンディショニング",
+			"description": "ダメージヘアにツヤとハリを取り戻す集中栄養トリートメント"
+		},
+		"scalp-detox": {
+			"name": "スカルプデトックス",
+			"description": "頭皮の老廃物を深くクレンジングし、育毛を促進するトリートメント"
+		},
+		"hot-oil-treatment": {
+			"name": "ホットオイルトリートメント",
+			"description": "温かいココナッツオイルを頭皮と髪に揉み込み、深い潤いを与えるマッサージ"
+		},
+		"herbal-rinse": {
+			"name": "ハーブリンス",
+			"description": "健やかでツヤのある髪のためのベトナム伝統ハーブリンス"
+		},
+		"keratin-smooth": {
+			"name": "ケラチンスムース",
+			"description": "くせ毛を抑え、長持ちするシルクのようなツヤを与えるケラチントリートメント"
+		},
+		"charcoal-purify": {
+			"name": "チャコールピュリファイ",
+			"description": "活性炭で不純物を吸着し、脂性頭皮をすっきりリフレッシュ"
+		},
+		"minty-cool-wash": {
+			"name": "ミントクールウォッシュ",
+			"description": "ペパーミントシャンプーとクーリング頭皮マッサージで瞬時に爽快感を実現"
+		},
+		"classic-glow-facial": {
+			"name": "クラシックグローフェイシャル",
+			"description": "ディープクレンジング、角質除去、保湿マスクで輝く素肌に"
+		},
+		"anti-aging-lift": {
+			"name": "アンチエイジングリフト",
+			"description": "コラーゲンブーストとマイクロカレントセラピーでお肌にハリを与える施術"
+		},
+		"acne-clear": {
+			"name": "アクネクリア",
+			"description": "サリチル酸と鎮静ブルーLEDライトを使用したニキビ浄化トリートメント"
+		},
+		"vitamin-c-brightening": {
+			"name": "ビタミンCブライトニング",
+			"description": "シミを薄くし、肌のトーンを均一に整えるブライトニングケア"
+		},
+		"hydra-rescue": {
+			"name": "ハイドラレスキュー",
+			"description": "乾燥・水分不足の肌タイプのための集中保湿トリートメント"
+		},
+		"gold-leaf-luxury": {
+			"name": "ゴールドリーフラグジュアリー",
+			"description": "純金箔マスクで肌の輝きを高め、細胞の再生を促進"
+		},
+		"oxygen-boost": {
+			"name": "オキシジェンブースト",
+			"description": "高圧酸素スプレーで肌をふっくらさせ、小ジワを瞬時にケア"
+		},
+		"sensitive-calm": {
+			"name": "センシティブカーム",
+			"description": "アロエとカモミールで敏感肌や赤みが出やすい肌を優しく鎮静するケア"
+		},
+		"smooth-heel-treatment": {
+			"name": "スムースヒールケア",
+			"description": "角質除去と集中保湿で荒れてひび割れたかかとを柔らかくケア"
+		},
+		"paraffin-wax-wrap": {
+			"name": "パラフィンワックスラップ",
+			"description": "温かいパラフィンコーティングで水分を閉じ込め、乾燥肌を癒すケア"
+		},
+		"callus-removal": {
+			"name": "角質除去",
+			"description": "専門のバフィングツールで硬くなった角質を優しく除去"
+		},
+		"heel-repair-mask": {
+			"name": "ヒールリペアマスク",
+			"description": "深刻なダメージを受けたかかとのためのオーバーナイト式集中マスクケア"
+		},
+		"foot-peel-polish": {
+			"name": "フットピール＆ポリッシュ",
+			"description": "ケミカルピーリングで赤ちゃんのような柔らかい肌を取り戻し、栄養クリームで仕上げ"
+		},
+		"shea-butter-wrap": {
+			"name": "シアバターラップ",
+			"description": "濃厚なシアバターの温熱ラップでひび割れたかかとを深く栄養補給"
+		},
+		"pumice-oil-ritual": {
+			"name": "軽石＆オイルリチュアル",
+			"description": "伝統的な軽石バフィングの後、温かいエッセンシャルオイルマッサージで仕上げ"
+		},
+		"heel-recovery-plus": {
+			"name": "ヒールリカバリープラス",
+			"description": "ピーリング、マスク、シーリングバームを組み合わせた多段階クリニカルケア"
+		},
+		"gel-manicure": {
+			"name": "ジェルマニキュア",
+			"description": "キューティクルケアとハンドマッサージ付きの長持ちジェルポリッシュ"
+		},
+		"classic-pedicure": {
+			"name": "クラシックペディキュア",
+			"description": "爪の整形、キューティクルケア、ポリッシュ、フットマッサージのフルペディキュア"
+		},
+		"nail-art-design": {
+			"name": "ネイルアートデザイン",
+			"description": "お好みのプレミアムデザインを手描きで仕上げるカスタムネイルアート"
+		},
+		"acrylic-extensions": {
+			"name": "アクリルエクステンション",
+			"description": "形と長さが選べるプロフェッショナルアクリルネイルエクステンション"
+		},
+		"mani-pedi-combo": {
+			"name": "マニペディコンボ",
+			"description": "ジェルポリッシュ仕上げ付きのマニキュア＆ペディキュアフルパッケージ"
+		},
+		"dip-powder-nails": {
+			"name": "ディップパウダーネイル",
+			"description": "ナチュラルな仕上がりと長持ちカラーのためのディップパウダー施術"
+		},
+		"nail-repair-strengthen": {
+			"name": "ネイルリペア＆強化",
+			"description": "プロテインボンドトリートメントと保護コーティングによるダメージネイルの修復"
+		},
+		"luxury-hand-spa": {
+			"name": "ラグジュアリーハンドスパ",
+			"description": "スクラブ、マスク、パラフィンディップ、ジェルポリッシュまで含むフルハンドケア"
+		},
+		"traditional-ear-clean": {
+			"name": "伝統耳掃除",
+			"description": "専用の竹製ツールで優しくケアする伝統的な耳掃除"
+		},
+		"ear-candling": {
+			"name": "イヤーキャンドリング",
+			"description": "老廃物を除去しリラクゼーションを促すホリスティックイヤーキャンドルセラピー"
+		},
+		"deep-clean-massage": {
+			"name": "ディープクリーン＆マッサージ",
+			"description": "丁寧な耳掃除の後、耳とこめかみを心地よくマッサージ"
+		},
+		"ear-acupressure": {
+			"name": "イヤーツボ押し",
+			"description": "耳のツボを刺激してストレスや頭痛を和らげるセラピー"
+		},
+		"premium-ear-spa": {
+			"name": "プレミアムイヤースパ",
+			"description": "クリーニング、マッサージ、温湿布、オイルケアを含むフルイヤートリートメント"
+		},
+		"warm-oil-ear-soak": {
+			"name": "温オイルイヤーソーク",
+			"description": "温かいハーブオイルを耳に優しく注ぎ、深い安らぎを与えるケア"
+		},
+		"asmr-ear-therapy": {
+			"name": "ASMRイヤーセラピー",
+			"description": "羽のように軽いツールと柔らかいブラッシングで深いリラクゼーションとゾクゾク感を誘発"
+		},
+		"ear-scalp-combo": {
+			"name": "イヤー＆スカルプコンボ",
+			"description": "耳掃除と活力を与える頭皮マッサージを組み合わせた頭全体のリラクゼーション"
+		},
+		"classic-haircut": {
+			"name": "クラシックヘアカット",
+			"description": "カウンセリング、シャンプー、プロのスタイリング付き精密カット"
+		},
+		"hot-towel-shave": {
+			"name": "ホットタオルシェーブ",
+			"description": "ホットタオルとアフターシェーブバーム付きの伝統ストレートレザーシェービング"
+		},
+		"beard-trim-shape": {
+			"name": "ビアードトリム＆シェイプ",
+			"description": "トリミング、シェイピング、コンディショニングオイルを使った専門ヒゲ手入れ"
+		},
+		"hair-color": {
+			"name": "ヘアカラーリング",
+			"description": "プレミアムアンモニアフリー染料を使用したプロフェッショナルヘアカラーリング"
+		},
+		"cut-shave-combo": {
+			"name": "カット＆シェーブコンボ",
+			"description": "ヘアカット、シェービング、スタイリング仕上げのオールインワングルーミングパッケージ"
+		},
+		"fade-design": {
+			"name": "フェード＆デザイン",
+			"description": "レザーラインデザインやパターンオプション付きの精密スキンフェード"
+		},
+		"grey-blend-camo": {
+			"name": "グレイブレンドカモ",
+			"description": "既存のヘアカラーに自然に馴染む白髪カバーリング"
+		},
+		"scalp-treatment": {
+			"name": "スカルプトリートメント",
+			"description": "角質除去とリバイタライジング美容液による頭皮ディープクレンジングセラピー"
+		},
+		"royal-treatment": {
+			"name": "ロイヤルトリートメント",
+			"description": "マッサージ、フェイシャル、フットケアを含む3時間のフルボディプレミアムコース"
+		},
+		"couples-retreat": {
+			"name": "カップルリトリート",
+			"description": "シャンパンとプライベートルームでお二人並んで楽しむスパセッション"
+		},
+		"executive-refresh": {
+			"name": "エグゼクティブリフレッシュ",
+			"description": "マッサージ、フェイシャル、ヘアウォッシュを含む90分のクイックリフレッシュ"
+		},
+		"full-day-escape": {
+			"name": "フルデイエスケープ",
+			"description": "すべてのスパサービスを体験する5時間のオールインクルーシブプレミアム旅"
+		},
+		"birthday-special": {
+			"name": "バースデースペシャル",
+			"description": "ケーキ、デコレーション、プレミアムスパサービスが含まれたお誕生日お祝いパッケージ"
+		},
+		"bridal-glow-package": {
+			"name": "ブライダルグローパッケージ",
+			"description": "フェイシャル、ボディスクラブ、マニペディ、ヘアスタイリングのウェディング準備コース"
+		},
+		"corporate-wellness": {
+			"name": "コーポレートウェルネス",
+			"description": "マッサージ、フットケア、軽食付きの法人チーム向けグループ予約パッケージ"
+		},
+		"monthly-membership": {
+			"name": "マンスリーメンバーシップ",
+			"description": "月4回のプレミアム来店と優先予約、10%割引特典付きメンバーシップ"
+		}
+	}
+}

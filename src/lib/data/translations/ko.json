@@ -1,0 +1,308 @@
+{
+	"experiences": {
+		"standard": { "title": "스탠다드", "description": "랜덤 직원 & 룸" },
+		"premium": { "title": "프리미엄", "description": "나만의 여정 디자인" },
+		"homespa": { "title": "홈스파", "description": "자택 스파" }
+	},
+	"categories": {
+		"body-massage": "바디 마사지",
+		"foot-massage": "발 마사지",
+		"hair-wash": "헤어 워시",
+		"facial": "페이셜",
+		"heel-care": "발뒤꿈치 케어",
+		"nails": "네일",
+		"ear-clean": "귀 청소",
+		"barber": "이발",
+		"vip-pack": "VIP 패키지"
+	},
+	"services": {
+		"traditional-vietnamese": {
+			"name": "베트남 전통 마사지",
+			"description": "따뜻한 허브 오일을 사용한 베트남 전통 기법으로 전신 이완"
+		},
+		"deep-tissue": {
+			"name": "딥 티슈 마사지",
+			"description": "깊은 근육층을 집중 가압하여 만성 긴장을 풀어주는 마사지"
+		},
+		"aromatherapy-bliss": {
+			"name": "아로마테라피 블리스",
+			"description": "프리미엄 에센셜 오일과 부드러운 터치로 심신의 조화를 선사"
+		},
+		"hot-stone-therapy": {
+			"name": "핫 스톤 테라피",
+			"description": "에너지 포인트에 따뜻한 현무암 스톤을 올려 스트레스를 녹여주는 테라피"
+		},
+		"thai-stretch": {
+			"name": "타이 스트레칭",
+			"description": "타이 전통 힐링에서 영감을 받은 다이나믹 스트레칭과 지압 요법"
+		},
+		"four-hands-massage": {
+			"name": "포핸드 마사지",
+			"description": "두 명의 테라피스트가 호흡을 맞춰 깊은 몰입감을 선사하는 마사지"
+		},
+		"bamboo-rolling": {
+			"name": "대나무 롤링",
+			"description": "따뜻한 대나무 스틱으로 근육을 풀어주고 혈액순환을 촉진"
+		},
+		"herbal-compress": {
+			"name": "허브 찜질",
+			"description": "찜질한 허브 찜질팩을 몸에 대어 통증과 염증을 완화"
+		},
+		"reflexology": {
+			"name": "발 반사요법",
+			"description": "반사 지점을 정밀 가압하여 신체 균형을 회복하고 혈액순환을 개선"
+		},
+		"herbal-foot-soak": {
+			"name": "허브 족욕",
+			"description": "따뜻한 허브 족욕 후 발과 종아리를 부드럽게 마사지"
+		},
+		"deep-foot-relief": {
+			"name": "딥 풋 릴리프",
+			"description": "발바닥 아치와 뒤꿈치를 집중 관리하는 피로 회복 트리트먼트"
+		},
+		"foot-leg-combo": {
+			"name": "발 & 다리 콤보",
+			"description": "따뜻한 오일로 발끝부터 무릎까지 하체 전체를 관리하는 코스"
+		},
+		"detox-foot-therapy": {
+			"name": "디톡스 풋 테라피",
+			"description": "숯 랩과 지압 마사지로 발의 독소를 제거하는 클렌징 테라피"
+		},
+		"ginger-foot-wrap": {
+			"name": "생강 풋 랩",
+			"description": "따뜻한 생강 페이스트 랩으로 혈액순환을 개선하고 냉증을 완화"
+		},
+		"salt-scrub-soak": {
+			"name": "솔트 스크럽 & 족욕",
+			"description": "히말라야 소금 각질 제거 후 미네랄이 풍부한 온수 족욕"
+		},
+		"plantar-relief": {
+			"name": "족저근막 릴리프",
+			"description": "족저근막과 뒤꿈치 통증을 집중 케어하는 전문 딥 프레셔 테라피"
+		},
+		"signature-wash": {
+			"name": "시그니처 워시",
+			"description": "프리미엄 허브 제품으로 두피 마사지와 함께하는 릴랙싱 샴푸"
+		},
+		"deep-conditioning": {
+			"name": "딥 컨디셔닝",
+			"description": "손상된 모발에 윤기와 탄력을 되살려주는 집중 영양 트리트먼트"
+		},
+		"scalp-detox": {
+			"name": "두피 디톡스",
+			"description": "두피 노폐물을 깊이 제거하고 모발 성장을 촉진하는 딥 클렌징"
+		},
+		"hot-oil-treatment": {
+			"name": "핫 오일 트리트먼트",
+			"description": "따뜻한 코코넛 오일로 두피와 모발에 깊은 수분을 공급하는 마사지"
+		},
+		"herbal-rinse": {
+			"name": "허브 린스",
+			"description": "건강하고 윤기 나는 모발을 위한 베트남 전통 허브 린스"
+		},
+		"keratin-smooth": {
+			"name": "케라틴 스무스",
+			"description": "곱슬기를 잡아주고 오래 지속되는 실크 같은 윤기를 선사하는 케라틴 케어"
+		},
+		"charcoal-purify": {
+			"name": "차콜 퓨리파이",
+			"description": "활성 숯으로 불순물을 흡착하고 지성 두피를 산뜻하게 정화"
+		},
+		"minty-cool-wash": {
+			"name": "민트 쿨 워시",
+			"description": "페퍼민트 샴푸와 쿨링 두피 마사지로 즉각적인 상쾌함을 선사"
+		},
+		"classic-glow-facial": {
+			"name": "클래식 글로우 페이셜",
+			"description": "딥 클렌징, 각질 제거, 수분 마스크로 빛나는 피부를 완성"
+		},
+		"anti-aging-lift": {
+			"name": "안티에이징 리프트",
+			"description": "콜라겐 부스팅과 마이크로커런트 테라피로 피부 탄력을 높이는 시술"
+		},
+		"acne-clear": {
+			"name": "아크네 클리어",
+			"description": "살리실산과 진정 블루 LED 라이트를 활용한 여드름 정화 트리트먼트"
+		},
+		"vitamin-c-brightening": {
+			"name": "비타민 C 브라이트닝",
+			"description": "다크 스팟을 옅게 하고 피부톤을 균일하게 가꿔주는 브라이트닝 케어"
+		},
+		"hydra-rescue": {
+			"name": "하이드라 레스큐",
+			"description": "건조하고 수분이 부족한 피부를 위한 집중 수분 공급 트리트먼트"
+		},
+		"gold-leaf-luxury": {
+			"name": "골드 리프 럭셔리",
+			"description": "순금 마스크로 피부 광채를 높이고 세포 재생을 촉진"
+		},
+		"oxygen-boost": {
+			"name": "옥시젠 부스트",
+			"description": "고압 산소 스프레이로 피부를 탱탱하게 하고 잔주름을 즉시 개선"
+		},
+		"sensitive-calm": {
+			"name": "센서티브 캄",
+			"description": "알로에와 캐모마일로 민감성 및 홍조 피부를 진정시키는 순한 트리트먼트"
+		},
+		"smooth-heel-treatment": {
+			"name": "매끄러운 발뒤꿈치 케어",
+			"description": "각질 제거와 집중 보습으로 거칠고 갈라진 뒤꿈치를 부드럽게 관리"
+		},
+		"paraffin-wax-wrap": {
+			"name": "파라핀 왁스 랩",
+			"description": "따뜻한 파라핀 코팅으로 수분을 가두고 건조한 피부를 치유"
+		},
+		"callus-removal": {
+			"name": "굳은살 제거",
+			"description": "전문 버핑 도구로 굳은살을 부드럽게 제거하는 시술"
+		},
+		"heel-repair-mask": {
+			"name": "발뒤꿈치 리페어 마스크",
+			"description": "심하게 손상된 뒤꿈치를 위한 오버나이트 스타일 집중 마스크 트리트먼트"
+		},
+		"foot-peel-polish": {
+			"name": "풋 필 & 폴리시",
+			"description": "케미컬 필링으로 아기 같은 부드러운 피부를 되찾고 영양 크림으로 마무리"
+		},
+		"shea-butter-wrap": {
+			"name": "시어 버터 랩",
+			"description": "풍부한 시어 버터 온열 랩으로 갈라진 뒤꿈치를 깊이 영양 공급"
+		},
+		"pumice-oil-ritual": {
+			"name": "경석 & 오일 리추얼",
+			"description": "전통 경석 버핑 후 따뜻한 에센셜 오일 마사지로 마무리"
+		},
+		"heel-recovery-plus": {
+			"name": "힐 리커버리 플러스",
+			"description": "필링, 마스크, 밀봉 밤을 결합한 다단계 클리니컬 트리트먼트"
+		},
+		"gel-manicure": {
+			"name": "젤 매니큐어",
+			"description": "큐티클 케어와 핸드 마사지를 포함한 지속력 높은 젤 폴리시"
+		},
+		"classic-pedicure": {
+			"name": "클래식 페디큐어",
+			"description": "네일 정리, 큐티클 케어, 폴리시 도포, 발 마사지로 구성된 풀 페디큐어"
+		},
+		"nail-art-design": {
+			"name": "네일 아트 디자인",
+			"description": "원하는 프리미엄 디자인으로 직접 그려드리는 맞춤 네일 아트"
+		},
+		"acrylic-extensions": {
+			"name": "아크릴 익스텐션",
+			"description": "모양과 길이를 선택할 수 있는 프로페셔널 아크릴 네일 익스텐션"
+		},
+		"mani-pedi-combo": {
+			"name": "매니-페디 콤보",
+			"description": "젤 폴리시 마무리가 포함된 매니큐어 & 페디큐어 풀 패키지"
+		},
+		"dip-powder-nails": {
+			"name": "딥 파우더 네일",
+			"description": "자연스러운 느낌과 지속력 있는 컬러를 위한 딥 파우더 시술"
+		},
+		"nail-repair-strengthen": {
+			"name": "네일 리페어 & 강화",
+			"description": "프로틴 본드 트리트먼트와 보호 코팅으로 손상된 손톱 복원"
+		},
+		"luxury-hand-spa": {
+			"name": "럭셔리 핸드 스파",
+			"description": "스크럽, 마스크, 파라핀 딥, 젤 폴리시까지 포함된 풀 핸드 트리트먼트"
+		},
+		"traditional-ear-clean": {
+			"name": "전통 귀 청소",
+			"description": "전용 대나무 도구로 부드럽게 관리하는 전통 귀 청소"
+		},
+		"ear-candling": {
+			"name": "이어 캔들링",
+			"description": "노폐물을 제거하고 릴랙세이션을 촉진하는 홀리스틱 이어 캔들 테라피"
+		},
+		"deep-clean-massage": {
+			"name": "딥 클린 & 마사지",
+			"description": "꼼꼼한 귀 청소 후 귀와 관자놀이를 부드럽게 마사지"
+		},
+		"ear-acupressure": {
+			"name": "귀 지압",
+			"description": "귀의 지압점을 자극하여 스트레스와 두통을 완화하는 테라피"
+		},
+		"premium-ear-spa": {
+			"name": "프리미엄 이어 스파",
+			"description": "청소, 마사지, 온 찜질, 오일 케어를 포함한 풀 이어 트리트먼트"
+		},
+		"warm-oil-ear-soak": {
+			"name": "온 오일 이어 소크",
+			"description": "따뜻한 허브 오일을 귀에 부드럽게 흘려 깊은 안정감을 선사"
+		},
+		"asmr-ear-therapy": {
+			"name": "ASMR 이어 테라피",
+			"description": "깃털처럼 가벼운 도구와 부드러운 브러싱으로 깊은 이완과 팅글을 유도"
+		},
+		"ear-scalp-combo": {
+			"name": "귀 & 두피 콤보",
+			"description": "귀 청소와 활력 두피 마사지를 결합한 헤드 전체 릴랙세이션"
+		},
+		"classic-haircut": {
+			"name": "클래식 헤어컷",
+			"description": "상담, 샴푸, 프로페셔널 스타일링이 포함된 정밀 커트"
+		},
+		"hot-towel-shave": {
+			"name": "핫 타올 쉐이빙",
+			"description": "핫 타올과 애프터셰이브 밤을 곁들인 전통 스트레이트 면도"
+		},
+		"beard-trim-shape": {
+			"name": "수염 트림 & 쉐이핑",
+			"description": "트리밍, 쉐이핑, 컨디셔닝 오일을 활용한 전문 수염 관리"
+		},
+		"hair-color": {
+			"name": "헤어 컬러링",
+			"description": "프리미엄 무암모니아 염료를 사용한 프로페셔널 헤어 컬러링"
+		},
+		"cut-shave-combo": {
+			"name": "컷 & 쉐이브 콤보",
+			"description": "헤어컷, 면도, 스타일링 마무리가 포함된 올인원 그루밍 패키지"
+		},
+		"fade-design": {
+			"name": "페이드 & 디자인",
+			"description": "면도기 라인 디자인과 패턴 옵션이 포함된 정밀 스킨 페이드"
+		},
+		"grey-blend-camo": {
+			"name": "새치 블렌딩",
+			"description": "기존 헤어 컬러에 자연스럽게 블렌딩하는 새치 커버"
+		},
+		"scalp-treatment": {
+			"name": "두피 트리트먼트",
+			"description": "각질 제거와 활력 세럼을 활용한 두피 딥 클렌징 테라피"
+		},
+		"royal-treatment": {
+			"name": "로얄 트리트먼트",
+			"description": "마사지, 페이셜, 풋 케어를 포함한 3시간 풀 바디 프리미엄 코스"
+		},
+		"couples-retreat": {
+			"name": "커플 리트리트",
+			"description": "샴페인과 프라이빗 룸에서 둘이 함께하는 나란히 스파 세션"
+		},
+		"executive-refresh": {
+			"name": "이그제큐티브 리프레시",
+			"description": "마사지, 페이셜, 헤어 워시를 포함한 90분 빠른 리프레시 패키지"
+		},
+		"full-day-escape": {
+			"name": "풀 데이 에스케이프",
+			"description": "모든 스파 서비스를 경험하는 5시간 올인클루시브 프리미엄 여정"
+		},
+		"birthday-special": {
+			"name": "생일 스페셜",
+			"description": "케이크, 데코레이션, 프리미엄 스파 서비스가 포함된 생일 축하 패키지"
+		},
+		"bridal-glow-package": {
+			"name": "브라이덜 글로우 패키지",
+			"description": "페이셜, 바디 스크럽, 매니페디, 헤어 스타일링으로 구성된 웨딩 준비 코스"
+		},
+		"corporate-wellness": {
+			"name": "기업 웰니스",
+			"description": "마사지, 풋 케어, 다과가 포함된 기업 팀 단체 예약 패키지"
+		},
+		"monthly-membership": {
+			"name": "월간 멤버십",
+			"description": "월 4회 프리미엄 방문과 우선 예약, 10% 할인 혜택이 포함된 멤버십"
+		}
+	}
+}

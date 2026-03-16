@@ -1,0 +1,308 @@
+{
+	"experiences": {
+		"standard": { "title": "标准", "description": "随机员工和房间" },
+		"premium": { "title": "尊享", "description": "定制您的旅程" },
+		"homespa": { "title": "上门水疗", "description": "上门水疗" }
+	},
+	"categories": {
+		"body-massage": "身体按摩",
+		"foot-massage": "足部按摩",
+		"hair-wash": "洗头",
+		"facial": "面部护理",
+		"heel-care": "足跟护理",
+		"nails": "美甲",
+		"ear-clean": "采耳",
+		"barber": "理发",
+		"vip-pack": "VIP 套餐"
+	},
+	"services": {
+		"traditional-vietnamese": {
+			"name": "越南传统按摩",
+			"description": "运用越南古法技艺，搭配温热草本精油，实现全身深度放松"
+		},
+		"deep-tissue": {
+			"name": "深层组织按摩",
+			"description": "强力深层按压，直达深层肌肉，释放长期积累的紧张与疲劳"
+		},
+		"aromatherapy-bliss": {
+			"name": "芳香精油按摩",
+			"description": "轻柔手法配合高级精油，带来身心合一的完美和谐体验"
+		},
+		"hot-stone-therapy": {
+			"name": "热石疗法",
+			"description": "将加热的玄武岩热石放置于能量穴位上，融化一切压力"
+		},
+		"thai-stretch": {
+			"name": "泰式拉伸",
+			"description": "源自泰式传统疗法的动态拉伸与穴位按压相结合"
+		},
+		"four-hands-massage": {
+			"name": "四手按摩",
+			"description": "两位按摩师同步协作，带来深度沉浸式按摩体验"
+		},
+		"bamboo-rolling": {
+			"name": "竹筒推拿",
+			"description": "温热竹棒沿肌肉滚动按压，舒缓紧张并促进血液循环"
+		},
+		"herbal-compress": {
+			"name": "草药热敷",
+			"description": "蒸热草药包沿身体按压，缓解酸痛与炎症"
+		},
+		"reflexology": {
+			"name": "足底反射疗法",
+			"description": "精准按压足部反射区穴位，恢复身体平衡并改善血液循环"
+		},
+		"herbal-foot-soak": {
+			"name": "草药足浴",
+			"description": "温热草药足浴后，配合舒缓的足部与小腿按摩"
+		},
+		"deep-foot-relief": {
+			"name": "足部深层舒缓",
+			"description": "针对疲劳双足的深度护理，重点关注足弓与足跟"
+		},
+		"foot-leg-combo": {
+			"name": "足腿组合护理",
+			"description": "从脚趾到膝盖的全面下肢护理，搭配温热精油"
+		},
+		"detox-foot-therapy": {
+			"name": "足部排毒疗法",
+			"description": "活性炭裹敷配合穴位按摩的足部排毒护理"
+		},
+		"ginger-foot-wrap": {
+			"name": "姜泥足部裹敷",
+			"description": "温热姜泥裹敷，促进血液循环，缓解手脚冰凉"
+		},
+		"salt-scrub-soak": {
+			"name": "盐磨砂足浴",
+			"description": "喜马拉雅盐去角质磨砂，随后浸泡富含矿物质的温水"
+		},
+		"plantar-relief": {
+			"name": "足底缓解疗法",
+			"description": "专业深层按压疗法，针对足底筋膜与足跟疼痛"
+		},
+		"signature-wash": {
+			"name": "招牌洗发",
+			"description": "使用高级草本产品的放松洗发，配合头皮按摩"
+		},
+		"deep-conditioning": {
+			"name": "深层护发",
+			"description": "深层滋养护理，修复受损发质，恢复光泽与强韧"
+		},
+		"scalp-detox": {
+			"name": "头皮排毒",
+			"description": "深层清洁头皮，去除残留物，促进头发生长"
+		},
+		"hot-oil-treatment": {
+			"name": "热油护理",
+			"description": "温热椰子油按摩头皮和头发，深层滋润补水"
+		},
+		"herbal-rinse": {
+			"name": "草本冲洗",
+			"description": "越南传统草本浸泡冲洗，令秀发健康亮泽"
+		},
+		"keratin-smooth": {
+			"name": "角蛋白顺滑",
+			"description": "专业角蛋白注入护理，抚平毛躁，带来持久丝滑光泽"
+		},
+		"charcoal-purify": {
+			"name": "活性炭净化",
+			"description": "活性炭深层清洁，吸附杂质，清爽油性头皮"
+		},
+		"minty-cool-wash": {
+			"name": "薄荷清凉洗发",
+			"description": "薄荷清凉洗发水配合冰爽头皮按摩，即刻焕然一新"
+		},
+		"classic-glow-facial": {
+			"name": "经典焕肤面部",
+			"description": "深层清洁、去角质与补水面膜，焕发肌肤光彩"
+		},
+		"anti-aging-lift": {
+			"name": "抗衰紧致",
+			"description": "紧致提升护理，搭配胶原蛋白补充与温和微电流疗法"
+		},
+		"acne-clear": {
+			"name": "祛痘净化",
+			"description": "水杨酸净化护理，配合舒缓蓝光LED疗法"
+		},
+		"vitamin-c-brightening": {
+			"name": "维C亮肤",
+			"description": "亮肤护理，淡化色斑，均匀肤色"
+		},
+		"hydra-rescue": {
+			"name": "水光急救",
+			"description": "密集补水注入，专为干燥缺水肌肤设计"
+		},
+		"gold-leaf-luxury": {
+			"name": "金箔奢华面部",
+			"description": "纯金箔面膜，提升肌肤光泽，促进细胞再生"
+		},
+		"oxygen-boost": {
+			"name": "氧气焕活",
+			"description": "高压氧气喷雾，即刻丰盈肌肤，淡化细纹"
+		},
+		"sensitive-calm": {
+			"name": "敏感肌舒缓",
+			"description": "芦荟与洋甘菊超温和护理，专为敏感泛红肌肤设计"
+		},
+		"smooth-heel-treatment": {
+			"name": "足跟柔滑护理",
+			"description": "去角质与深层保湿，软化粗糙干裂的足跟"
+		},
+		"paraffin-wax-wrap": {
+			"name": "石蜡裹敷",
+			"description": "温热石蜡裹敷，锁住水分，修复干燥肌肤"
+		},
+		"callus-removal": {
+			"name": "老茧去除",
+			"description": "专业去除硬化角质，使用温和打磨工具"
+		},
+		"heel-repair-mask": {
+			"name": "足跟修复面膜",
+			"description": "仿夜间密集修复面膜护理，针对严重受损足跟"
+		},
+		"foot-peel-polish": {
+			"name": "足部焕肤抛光",
+			"description": "化学焕肤呈现婴儿般柔嫩肌肤，随后涂抹滋养霜"
+		},
+		"shea-butter-wrap": {
+			"name": "乳木果油裹敷",
+			"description": "浓郁乳木果油加热裹敷，深层滋养修复干裂足跟"
+		},
+		"pumice-oil-ritual": {
+			"name": "浮石精油仪式",
+			"description": "传统浮石打磨后，配合温热精油按摩"
+		},
+		"heel-recovery-plus": {
+			"name": "足跟深度修复",
+			"description": "多步骤专业护理，结合焕肤、面膜与封闭修复膏"
+		},
+		"gel-manicure": {
+			"name": "凝胶美甲",
+			"description": "持久凝胶美甲，包含甘皮护理与手部按摩"
+		},
+		"classic-pedicure": {
+			"name": "经典足部美甲",
+			"description": "全套指甲修型、甘皮护理、涂色与足部按摩"
+		},
+		"nail-art-design": {
+			"name": "美甲艺术设计",
+			"description": "定制手绘美甲艺术，提供多种高级图案可选"
+		},
+		"acrylic-extensions": {
+			"name": "亚克力美甲延长",
+			"description": "专业亚克力美甲延长，可选形状与长度"
+		},
+		"mani-pedi-combo": {
+			"name": "手足护理套餐",
+			"description": "手足护理套餐，包含凝胶美甲完整服务"
+		},
+		"dip-powder-nails": {
+			"name": "蘸粉美甲",
+			"description": "持久蘸粉美甲，自然效果与持久色彩兼具"
+		},
+		"nail-repair-strengthen": {
+			"name": "指甲修复加固",
+			"description": "受损指甲修复，蛋白质键合护理与保护涂层"
+		},
+		"luxury-hand-spa": {
+			"name": "奢华手部护理",
+			"description": "全套手部护理，包含磨砂、面膜、石蜡浸泡与凝胶美甲"
+		},
+		"traditional-ear-clean": {
+			"name": "传统采耳",
+			"description": "使用专业竹制工具轻柔采耳，手法细腻温和"
+		},
+		"ear-candling": {
+			"name": "耳烛疗法",
+			"description": "传统耳烛疗法，清除耳垢并促进身心放松"
+		},
+		"deep-clean-massage": {
+			"name": "深度清洁按摩",
+			"description": "彻底清洁后，配合舒缓的耳部与太阳穴按摩"
+		},
+		"ear-acupressure": {
+			"name": "耳部穴位按压",
+			"description": "耳部穴位按压刺激，缓解压力与头痛"
+		},
+		"premium-ear-spa": {
+			"name": "尊享耳部护理",
+			"description": "全套耳部护理，包含清洁、按摩、热敷与精油"
+		},
+		"warm-oil-ear-soak": {
+			"name": "温油耳浴",
+			"description": "温热草本精油缓缓滴入耳道，带来深度舒缓体验"
+		},
+		"asmr-ear-therapy": {
+			"name": "ASMR耳部疗法",
+			"description": "轻羽般的工具与柔软刷拭，带来深度放松与愉悦体验"
+		},
+		"ear-scalp-combo": {
+			"name": "耳部头皮组合",
+			"description": "采耳与活力头皮按摩相结合，全面放松头部"
+		},
+		"classic-haircut": {
+			"name": "经典理发",
+			"description": "精准剪发，包含咨询、洗发与专业造型"
+		},
+		"hot-towel-shave": {
+			"name": "热毛巾剃须",
+			"description": "传统直刀剃须，配合热毛巾与须后润肤膏"
+		},
+		"beard-trim-shape": {
+			"name": "胡须修剪造型",
+			"description": "专业胡须修剪造型，配合滋养护理油"
+		},
+		"hair-color": {
+			"name": "染发",
+			"description": "专业染发服务，使用高级无氨染发剂"
+		},
+		"cut-shave-combo": {
+			"name": "理发剃须套餐",
+			"description": "完整男士理容套餐，包含剪发、剃须与造型"
+		},
+		"fade-design": {
+			"name": "渐变设计剪裁",
+			"description": "精准渐变剪裁，可选剃刀线条图案设计"
+		},
+		"grey-blend-camo": {
+			"name": "白发自然遮盖",
+			"description": "自然遮盖白发，与现有发色无缝融合"
+		},
+		"scalp-treatment": {
+			"name": "头皮护理",
+			"description": "深层清洁头皮疗法，配合去角质与活力修复精华"
+		},
+		"royal-treatment": {
+			"name": "皇家尊享套餐",
+			"description": "三小时全身尊享体验，包含按摩、面部护理与足部护理"
+		},
+		"couples-retreat": {
+			"name": "双人甜蜜套餐",
+			"description": "双人并排水疗，配香槟与私密包间"
+		},
+		"executive-refresh": {
+			"name": "商务焕活套餐",
+			"description": "九十分钟快速焕活套餐，包含按摩、面部护理与洗头"
+		},
+		"full-day-escape": {
+			"name": "全日尊享之旅",
+			"description": "五小时全包式水疗之旅，尊享我们所有服务项目"
+		},
+		"birthday-special": {
+			"name": "生日特别套餐",
+			"description": "生日庆祝套餐，包含蛋糕、装饰与高级水疗服务"
+		},
+		"bridal-glow-package": {
+			"name": "新娘焕颜套餐",
+			"description": "婚前美丽准备，包含面部护理、身体磨砂、手足护理与发型设计"
+		},
+		"corporate-wellness": {
+			"name": "企业健康套餐",
+			"description": "团队集体预约，包含按摩、足部护理与茶点"
+		},
+		"monthly-membership": {
+			"name": "月度会员",
+			"description": "每月四次高级服务，享优先预约与九折优惠"
+		}
+	}
+}
