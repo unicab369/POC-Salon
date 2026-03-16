@@ -84,6 +84,7 @@
 				</svg>
 			</div>
 			<p class="address">11 NGO DUC KE, SAI GON WARD<br />HCMC, VIETNAM</p>
+			<span class="version">Made By POC-Wizard · v0.0.1</span>
 		</footer>
 	</div>
 </main>
@@ -308,6 +309,13 @@
 		font-weight: 300;
 		text-transform: uppercase;
 		text-align: center;
+	}
+
+	.version {
+		font-size: 0.7rem;
+		color: #4a3f32;
+		letter-spacing: 0.08em;
+		font-weight: 300;
 	}
 
 	/* Responsive */

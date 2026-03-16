@@ -82,6 +82,7 @@
 		left: 0;
 		width: 200%;
 		height: 200%;
+		will-change: transform, opacity;
 	}
 
 	/* Layer 1 — bright foreground stars, slow drift */
@@ -205,9 +206,9 @@
 	}
 
 	@keyframes glow-pulse {
-		0% { opacity: 0.2; filter: blur(45px); }
-		50% { opacity: 1; filter: blur(30px); }
-		100% { opacity: 0.2; filter: blur(45px); }
+		0% { opacity: 0.2; }
+		50% { opacity: 1; }
+		100% { opacity: 0.2; }
 	}
 
 	@keyframes glow-move {
@@ -301,6 +302,7 @@
 		box-shadow: 0 0 5px 3px rgba(193,154,107,0.4);
 		filter: blur(1px);
 		transform-origin: 0 0;
+		will-change: transform;
 	}
 
 	.p1 { animation: ellipse-orbit-a 42s linear infinite; }
@@ -486,6 +488,7 @@
 		opacity: 0;
 		transform: rotate(-45deg);
 		animation: falling-star 12s var(--delay) linear infinite;
+		will-change: transform, opacity;
 	}
 
 	.star::after {
@@ -530,6 +533,37 @@
 			top: calc(var(--start-y) + 120vh);
 			left: calc(var(--start-x) - 120vh);
 			opacity: 0;
+		}
+	}
+
+	/* Mobile performance: reduce animated elements */
+	@media (max-width: 768px) {
+		.starfield-3,
+		.starfield-4 {
+			display: none;
+		}
+
+		.p7, .p8 {
+			display: none;
+		}
+
+		.dust-2,
+		.dust-3 {
+			display: none;
+		}
+
+		.nebula-2 {
+			display: none;
+		}
+
+		.star:nth-child(4),
+		.star:nth-child(5) {
+			display: none;
+		}
+
+		.band-glow {
+			animation: none;
+			opacity: 0.5;
 		}
 	}
 </style>
