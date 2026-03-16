@@ -175,15 +175,8 @@
 	.divider {
 		width: 180px;
 		height: 1px;
-		background: linear-gradient(90deg, transparent 0%, transparent 30%, #c19a6b 50%, transparent 70%, transparent 100%);
-		background-size: 300% 100%;
-		animation: shimmer 4s ease-in-out infinite;
+		background: linear-gradient(90deg, transparent, #c19a6b, transparent);
 		margin-top: 10px;
-	}
-
-	@keyframes shimmer {
-		0% { background-position: 100% 0; }
-		100% { background-position: -100% 0; }
 	}
 
 	.mission-text {
