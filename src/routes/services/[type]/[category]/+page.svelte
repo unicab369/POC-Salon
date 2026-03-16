@@ -27,10 +27,13 @@
 	function buildDurations(basePrice: number): DurationOption[] {
 		const round = (n: number) => Math.round(n / 10000) * 10000;
 		return [
-			{ minutes: 45, label: '45 min', priceVND: basePrice },
-			{ minutes: 60, label: '60 min', priceVND: round(basePrice * 1.3) },
-			{ minutes: 70, label: '70 min', priceVND: round(basePrice * 1.5) },
-			{ minutes: 90, label: '90 min', priceVND: round(basePrice * 1.85) },
+			{ minutes: 45, label: '45 mins', priceVND: basePrice },
+			{ minutes: 60, label: '60 mins', priceVND: round(basePrice * 1.3) },
+			{ minutes: 70, label: '70 mins', priceVND: round(basePrice * 1.5) },
+			{ minutes: 90, label: '90 mins', priceVND: round(basePrice * 1.85) },
+			{ minutes: 120, label: '120 mins', priceVND: round(basePrice * 2.4) },
+			{ minutes: 180, label: '180 mins', priceVND: round(basePrice * 3.5) },
+			{ minutes: 240, label: '240 mins', priceVND: round(basePrice * 4.5) },
 		];
 	}
 
@@ -182,6 +185,7 @@
 	let customerContactType = $state<'phone' | 'email'>('phone');
 	let customerContact = $state('');
 	let customerGender = $state<'male' | 'female'>('male');
+	let showMoreDurations = $state(false);
 	let snackbar = $state('');
 	let snackbarTimeout: ReturnType<typeof setTimeout>;
 
@@ -363,6 +367,7 @@
 
 	function closePopup() {
 		popupService = null;
+		showMoreDurations = false;
 	}
 
 	function closeOrderConfirm() {
@@ -566,7 +571,7 @@
 			</div>
 
 			<div class="duration-grid">
-				{#each popupService.durations as dur}
+				{#each popupService.durations.filter(d => d.minutes <= 90) as dur}
 					<button class="duration-card" onclick={() => selectDuration(dur.minutes)}>
 						<span class="dur-time">{dur.label}</span>
 						<span class="dur-price">{formatVND(dur.priceVND)}</span>
@@ -575,7 +580,26 @@
 				{/each}
 			</div>
 
-			<div class="popup-footer">
+			{#if showMoreDurations}
+				<div class="duration-grid" style="margin-top: 12px;">
+					{#each popupService.durations.filter(d => d.minutes > 90) as dur}
+						<button class="duration-card" onclick={() => selectDuration(dur.minutes)}>
+							<span class="dur-time">{dur.label}</span>
+							<span class="dur-price">{formatVND(dur.priceVND)}</span>
+							<span class="dur-usd">~${(dur.priceVND / VND_TO_USD).toFixed(2)}</span>
+						</button>
+					{/each}
+				</div>
+			{/if}
+
+			<button class="show-more-btn" onclick={() => showMoreDurations = !showMoreDurations}>
+				<span>{showMoreDurations ? 'Show Less' : 'Show More'}</span>
+				<svg class="show-more-chevron" class:flipped={showMoreDurations} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M6 9l6 6 6-6" />
+				</svg>
+			</button>
+
+			<div class="popup-footer" style="margin-top: 16px;">
 				<button class="btn-body-close" onclick={closePopup}>{$t('detail.close')}</button>
 			</div>
 		</div>
@@ -1167,6 +1191,8 @@
 		position: relative;
 		width: 100%;
 		max-width: 480px;
+		max-height: 85vh;
+		overflow-y: auto;
 		background: #1a1a1a;
 		border-top-left-radius: 24px;
 		border-top-right-radius: 24px;
@@ -1298,6 +1324,30 @@
 
 	.duration-card:active {
 		transform: scale(0.98);
+	}
+
+	.show-more-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		width: 100%;
+		margin-top: 12px;
+		padding: 10px;
+		background: none;
+		border: none;
+		color: #c19a6b;
+		font-size: 0.9rem;
+		font-weight: 500;
+		cursor: pointer;
+	}
+
+	.show-more-chevron {
+		transition: transform 0.3s ease;
+	}
+
+	.show-more-chevron.flipped {
+		transform: rotate(180deg);
 	}
 
 	.dur-time {
