@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { ordersByCategory, type ServiceSelection, type DurationOption } from '$lib/orderStore';
 
 	interface Category {
 		name: string;
@@ -20,9 +21,140 @@
 		{ name: 'VIP Pack', id: 'vip-pack', min: 120 }
 	];
 
+	function buildDurations(basePrice: number): DurationOption[] {
+		const round = (n: number) => Math.round(n / 10000) * 10000;
+		return [
+			{ minutes: 45, label: '45 min', priceVND: basePrice },
+			{ minutes: 60, label: '60 min', priceVND: round(basePrice * 1.3) },
+			{ minutes: 70, label: '70 min', priceVND: round(basePrice * 1.5) },
+			{ minutes: 90, label: '90 min', priceVND: round(basePrice * 1.85) },
+		];
+	}
+
+	const serviceCatalog: Record<string, { name: string; durations: DurationOption[] }[]> = {
+		'body-massage': [
+			{ name: 'Traditional Vietnamese', durations: buildDurations(450000) },
+			{ name: 'Deep Tissue', durations: buildDurations(550000) },
+			{ name: 'Aromatherapy Bliss', durations: buildDurations(500000) },
+			{ name: 'Hot Stone Therapy', durations: buildDurations(650000) },
+			{ name: 'Thai Stretch', durations: buildDurations(500000) },
+			{ name: 'Four Hands Massage', durations: buildDurations(800000) },
+			{ name: 'Bamboo Rolling', durations: buildDurations(580000) },
+			{ name: 'Herbal Compress', durations: buildDurations(520000) }
+		],
+		'foot-massage': [
+			{ name: 'Reflexology', durations: buildDurations(350000) },
+			{ name: 'Herbal Foot Soak', durations: buildDurations(300000) },
+			{ name: 'Deep Foot Relief', durations: buildDurations(400000) },
+			{ name: 'Foot & Leg Combo', durations: buildDurations(450000) },
+			{ name: 'Detox Foot Therapy', durations: buildDurations(380000) },
+			{ name: 'Ginger Foot Wrap', durations: buildDurations(320000) },
+			{ name: 'Salt Scrub & Soak', durations: buildDurations(360000) },
+			{ name: 'Plantar Relief', durations: buildDurations(420000) }
+		],
+		'hair-wash': [
+			{ name: 'Signature Wash', durations: buildDurations(200000) },
+			{ name: 'Deep Conditioning', durations: buildDurations(300000) },
+			{ name: 'Scalp Detox', durations: buildDurations(350000) },
+			{ name: 'Hot Oil Treatment', durations: buildDurations(280000) },
+			{ name: 'Herbal Rinse', durations: buildDurations(250000) },
+			{ name: 'Keratin Smooth', durations: buildDurations(400000) },
+			{ name: 'Charcoal Purify', durations: buildDurations(320000) },
+			{ name: 'Minty Cool Wash', durations: buildDurations(230000) }
+		],
+		'facial': [
+			{ name: 'Classic Glow Facial', durations: buildDurations(400000) },
+			{ name: 'Anti-Aging Lift', durations: buildDurations(600000) },
+			{ name: 'Acne Clear', durations: buildDurations(450000) },
+			{ name: 'Vitamin C Brightening', durations: buildDurations(500000) },
+			{ name: 'Hydra Rescue', durations: buildDurations(420000) },
+			{ name: 'Gold Leaf Luxury', durations: buildDurations(750000) },
+			{ name: 'Oxygen Boost', durations: buildDurations(550000) },
+			{ name: 'Sensitive Calm', durations: buildDurations(430000) }
+		],
+		'heel-care': [
+			{ name: 'Smooth Heel Treatment', durations: buildDurations(250000) },
+			{ name: 'Paraffin Wax Wrap', durations: buildDurations(300000) },
+			{ name: 'Callus Removal', durations: buildDurations(200000) },
+			{ name: 'Heel Repair Mask', durations: buildDurations(280000) },
+			{ name: 'Foot Peel & Polish', durations: buildDurations(320000) },
+			{ name: 'Shea Butter Wrap', durations: buildDurations(270000) },
+			{ name: 'Pumice & Oil Ritual', durations: buildDurations(220000) },
+			{ name: 'Heel Recovery Plus', durations: buildDurations(380000) }
+		],
+		'nails': [
+			{ name: 'Gel Manicure', durations: buildDurations(300000) },
+			{ name: 'Classic Pedicure', durations: buildDurations(250000) },
+			{ name: 'Nail Art Design', durations: buildDurations(400000) },
+			{ name: 'Acrylic Extensions', durations: buildDurations(500000) },
+			{ name: 'Mani-Pedi Combo', durations: buildDurations(450000) },
+			{ name: 'Dip Powder Nails', durations: buildDurations(350000) },
+			{ name: 'Nail Repair & Strengthen', durations: buildDurations(280000) },
+			{ name: 'Luxury Hand Spa', durations: buildDurations(550000) }
+		],
+		'ear-clean': [
+			{ name: 'Traditional Ear Clean', durations: buildDurations(150000) },
+			{ name: 'Ear Candling', durations: buildDurations(200000) },
+			{ name: 'Deep Clean & Massage', durations: buildDurations(250000) },
+			{ name: 'Ear Acupressure', durations: buildDurations(180000) },
+			{ name: 'Premium Ear Spa', durations: buildDurations(300000) },
+			{ name: 'Warm Oil Ear Soak', durations: buildDurations(220000) },
+			{ name: 'ASMR Ear Therapy', durations: buildDurations(280000) },
+			{ name: 'Ear & Scalp Combo', durations: buildDurations(350000) }
+		],
+		'barber': [
+			{ name: 'Classic Haircut', durations: buildDurations(200000) },
+			{ name: 'Hot Towel Shave', durations: buildDurations(250000) },
+			{ name: 'Beard Trim & Shape', durations: buildDurations(150000) },
+			{ name: 'Hair Color', durations: buildDurations(400000) },
+			{ name: 'Cut & Shave Combo', durations: buildDurations(350000) },
+			{ name: 'Fade & Design', durations: buildDurations(280000) },
+			{ name: 'Grey Blend Camo', durations: buildDurations(350000) },
+			{ name: 'Scalp Treatment', durations: buildDurations(300000) }
+		],
+		'vip-pack': [
+			{ name: 'Royal Treatment', durations: buildDurations(1500000) },
+			{ name: 'Couples Retreat', durations: buildDurations(2500000) },
+			{ name: 'Executive Refresh', durations: buildDurations(900000) },
+			{ name: 'Full Day Escape', durations: buildDurations(3000000) },
+			{ name: 'Birthday Special', durations: buildDurations(2000000) },
+			{ name: 'Bridal Glow Package', durations: buildDurations(3500000) },
+			{ name: 'Corporate Wellness', durations: buildDurations(1800000) },
+			{ name: 'Monthly Membership', durations: buildDurations(4000000) }
+		]
+	};
+
+	const VND_TO_USD = 25000;
+
 	let visible = $state(false);
-	let serviceType = $derived($page.params.type);
+	let serviceType = $derived($page.params.type ?? '');
 	let displayType = $derived(serviceType.charAt(0).toUpperCase() + serviceType.slice(1));
+
+	function computeTotal(orders: Record<string, Map<string, ServiceSelection>>): { totalVND: number; totalCount: number } {
+		let totalVND = 0;
+		let totalCount = 0;
+		for (const [catId, selections] of Object.entries(orders)) {
+			const catalog = serviceCatalog[catId];
+			if (!catalog) continue;
+			for (const [name, sel] of selections) {
+				const service = catalog.find(s => s.name === name);
+				if (service) {
+					const dur = service.durations.find(d => d.minutes === sel.minutes);
+					if (dur) totalVND += dur.priceVND;
+					totalCount++;
+				}
+			}
+		}
+		return { totalVND, totalCount };
+	}
+
+	function formatVND(amount: number): string {
+		return amount.toLocaleString('vi-VN') + '\u0111';
+	}
+
+	function getCategoryOrderCount(catId: string, orders: Record<string, Map<string, ServiceSelection>>): number {
+		return orders[catId]?.size ?? 0;
+	}
 
 	onMount(() => {
 		setTimeout(() => {
@@ -138,16 +270,31 @@
 						{/if}
 					</div>
 					<span class="cat-name">{cat.name}</span>
+					{#if getCategoryOrderCount(cat.id, $ordersByCategory) > 0}
+						<span class="cat-badge">{getCategoryOrderCount(cat.id, $ordersByCategory)}</span>
+					{/if}
 				</a>
 			{/each}
 		</div>
 
-		<a href="/services" class="back-link">
-			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-				<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
-			</svg>
-			Experience
-		</a>
+		<footer class="footer-actions">
+			{#if computeTotal($ordersByCategory).totalVND > 0}
+				{@const totals = computeTotal($ordersByCategory)}
+				<div class="total-bar">
+					<span class="total-label">Total <span class="total-count">({totals.totalCount} selected)</span></span>
+					<div class="total-prices">
+						<span class="total-vnd">{formatVND(totals.totalVND)}</span>
+						<span class="total-usd">~${(totals.totalVND / VND_TO_USD).toFixed(2)}</span>
+					</div>
+				</div>
+			{/if}
+			<a href="/services" class="back-link">
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
+				</svg>
+				Experience
+			</a>
+		</footer>
 	</div>
 </main>
 
@@ -180,7 +327,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 120px 24px 120px;
+		padding: 120px 24px 160px;
 		gap: 36px;
 		opacity: 0;
 		transition: opacity 1.2s ease;
@@ -301,14 +448,89 @@
 		background: linear-gradient(to top, #0f0f0f 0%, transparent 100%);
 	}
 
-	.back-link {
+	.cat-badge {
+		position: absolute;
+		top: -6px;
+		right: -6px;
+		min-width: 20px;
+		height: 20px;
+		padding: 0 6px;
+		border-radius: 10px;
+		background: #50aa78;
+		color: #fff;
+		font-size: 0.7rem;
+		font-weight: 700;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+	}
+
+	.cat-card {
+		position: relative;
+	}
+
+	.footer-actions {
 		position: fixed;
 		bottom: 0;
 		left: 50%;
 		transform: translateX(-50%);
-		width: calc(100% - 48px);
+		width: 100%;
 		max-width: 480px;
 		z-index: 10;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 16px 24px 20px;
+		background: #0f0f0f;
+	}
+
+	.total-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 20px;
+		border-radius: 14px;
+		background: linear-gradient(135deg, rgba(80,170,120,0.18), rgba(60,140,100,0.1));
+		border: 1px solid rgba(80,170,120,0.5);
+		box-shadow: 0 4px 24px rgba(80,170,120,0.15);
+		width: 100%;
+	}
+
+	.total-label {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: #50aa78;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.total-count {
+		text-transform: none;
+		font-weight: 400;
+		font-size: 0.8rem;
+	}
+
+	.total-prices {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 2px;
+	}
+
+	.total-vnd {
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: #50aa78;
+	}
+
+	.total-usd {
+		font-size: 1rem;
+		color: #3d8a60;
+		font-weight: 600;
+	}
+
+	.back-link {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -319,7 +541,6 @@
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
 		padding: 14px 24px;
-		margin-bottom: 20px;
 		border: 1px solid rgba(193,154,107,0.2);
 		border-radius: 40px;
 		transition: color 0.3s, border-color 0.3s, background 0.3s;
@@ -333,7 +554,7 @@
 
 	@media (max-width: 640px) {
 		.page {
-			padding: 100px 16px 120px;
+			padding: 100px 16px 160px;
 			gap: 28px;
 		}
 

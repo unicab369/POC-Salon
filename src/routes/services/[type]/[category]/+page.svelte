@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { ordersByCategory, setCategoryOrders, getOrCreateCategoryOrders, type ServiceSelection as StoreServiceSelection } from '$lib/orderStore';
 
 	interface DurationOption {
 		minutes: number;
@@ -154,21 +155,15 @@
 	const VND_TO_USD = 25000;
 
 	let visible = $state(false);
-	let serviceType = $derived($page.params.type);
-	let categoryId = $derived($page.params.category);
+	let serviceType = $derived($page.params.type ?? '');
+	let categoryId = $derived($page.params.category ?? '');
 	let category = $derived(categories.find(c => c.id === categoryId));
 	type BodyPref = 'focus' | 'avoid' | '';
 	type TherapistPref = 'male' | 'female' | 'random';
 	type StrengthPref = 'light' | 'medium' | 'strong';
 	const bodyAreas = ['Head', 'Neck', 'Shoulder', 'Arm', 'Back', 'Thigh', 'Calf', 'Foot'] as const;
 
-	interface ServiceSelection {
-		minutes: number;
-		therapist: TherapistPref;
-		strength: StrengthPref;
-	}
-
-	let selectedServices = $state<Map<string, ServiceSelection>>(new Map());
+	let selectedServices = $state<Map<string, StoreServiceSelection>>(getOrCreateCategoryOrders(categoryId, $ordersByCategory));
 	let popupService = $state<Service | null>(null);
 	let showBodyCustomize = $state(false);
 	let showInvoice = $state(false);
@@ -177,8 +172,13 @@
 	let bodyPrefs = $state<Record<string, BodyPref>>(Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref])));
 	let therapistPref = $state<TherapistPref>('random');
 	let strengthPref = $state<StrengthPref>('medium');
+	let noteText = $state('');
 	let snackbar = $state('');
 	let snackbarTimeout: ReturnType<typeof setTimeout>;
+
+	$effect(() => {
+		setCategoryOrders(categoryId, selectedServices);
+	});
 
 	let canScrollUp = $state(false);
 	let canScrollDown = $state(false);
@@ -231,6 +231,57 @@
 		return (totalVND() / VND_TO_USD).toFixed(2);
 	});
 
+	interface AllOrderItem {
+		categoryName: string;
+		categoryId: string;
+		serviceName: string;
+		minutes: number;
+		priceVND: number;
+		durationLabel: string;
+		therapist: string;
+		strength: string;
+	}
+
+	let allOrders = $derived((): { items: AllOrderItem[]; byCategory: Map<string, AllOrderItem[]> } => {
+		const storeData = $ordersByCategory;
+		const items: AllOrderItem[] = [];
+		const byCategory = new Map<string, AllOrderItem[]>();
+
+		for (const cat of categories) {
+			const catOrders = cat.id === categoryId ? selectedServices : (storeData[cat.id] ?? new Map());
+			if (catOrders.size === 0) continue;
+
+			const catItems: AllOrderItem[] = [];
+			for (const [name, sel] of catOrders) {
+				const service = cat.services.find(s => s.name === name);
+				if (!service) continue;
+				const dur = service.durations.find(d => d.minutes === sel.minutes);
+				if (!dur) continue;
+				const item: AllOrderItem = {
+					categoryName: cat.name,
+					categoryId: cat.id,
+					serviceName: name,
+					minutes: sel.minutes,
+					priceVND: dur.priceVND,
+					durationLabel: dur.label,
+					therapist: sel.therapist,
+					strength: sel.strength
+				};
+				items.push(item);
+				catItems.push(item);
+			}
+			if (catItems.length > 0) {
+				byCategory.set(cat.name, catItems);
+			}
+		}
+
+		return { items, byCategory };
+	});
+
+	let globalTotalVND = $derived(() => allOrders().items.reduce((sum, i) => sum + i.priceVND, 0));
+	let globalTotalCount = $derived(() => allOrders().items.length);
+	let globalTotalMinutes = $derived(() => allOrders().items.reduce((sum, i) => sum + i.minutes, 0));
+
 	function dismissSnackbar() {
 		clearTimeout(snackbarTimeout);
 		snackbar = '';
@@ -248,6 +299,7 @@
 			bodyPrefs = Object.fromEntries(bodyAreas.map(a => [a, '' as BodyPref]));
 			therapistPref = 'random';
 			strengthPref = 'medium';
+			noteText = '';
 			showBodyCustomize = true;
 			setTimeout(() => {
 				popupService = null;
@@ -296,12 +348,13 @@
 	}
 
 	function getExpectUrl(): string {
-		if (!category) return `/services/${serviceType}/${categoryId}/expect`;
-		const items = [...selectedServices.entries()].map(([name, sel]) => {
-			const service = category!.services.find(s => s.name === name);
-			const dur = service?.durations.find(d => d.minutes === sel.minutes);
-			return { name, minutes: sel.minutes, price: dur?.priceVND ?? 0 };
-		});
+		const all = allOrders();
+		const items = all.items.map(i => ({
+			name: i.serviceName,
+			minutes: i.minutes,
+			price: i.priceVND,
+			category: i.categoryName
+		}));
 		const params = new URLSearchParams({ services: JSON.stringify(items) });
 		return `/services/${serviceType}/${categoryId}/expect?${params}`;
 	}
@@ -370,10 +423,10 @@
 
 {#snippet totalCard()}
 	<div class="total-bar">
-		<span class="total-label">Total <span class="total-count">({selectedServices.size} selected)</span></span>
+		<span class="total-label">Total <span class="total-count">({globalTotalCount()} selected)</span></span>
 		<div class="total-prices">
-			<span class="total-vnd">{formatVND(totalVND())}</span>
-			<span class="total-usd">~${totalUSD()}</span>
+			<span class="total-vnd">{formatVND(globalTotalVND())}</span>
+			<span class="total-usd">~${(globalTotalVND() / VND_TO_USD).toFixed(2)}</span>
 		</div>
 	</div>
 {/snippet}
@@ -424,7 +477,7 @@
 		{/if}
 
 		<footer class="footer-actions">
-			{#if totalVND() > 0}
+			{#if globalTotalVND() > 0}
 				{@render totalCard()}
 			{/if}
 			<div class="footer-buttons">
@@ -553,6 +606,16 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="customize-section">
+				<h3 class="section-label">Note</h3>
+				<textarea
+					class="note-textarea"
+					placeholder="Any special requests or preferences..."
+					bind:value={noteText}
+					rows="3"
+				></textarea>
+			</div>
 		</div>
 		</div>
 
@@ -563,20 +626,19 @@
 	</div>
 {/if}
 
-{#if showInvoice && category}
+{#if showInvoice}
 	<div class="invoice-modal">
 		{@render pageHeader('Invoice')}
 		<div class="invoice-scroll">
-			<div class="invoice-list">
-				{#each [...selectedServices.entries()] as [name, sel], i}
-					{@const service = category.services.find(s => s.name === name)}
-					{@const dur = service?.durations.find(d => d.minutes === sel.minutes)}
-					{#if service && dur}
+			{#each [...allOrders().byCategory.entries()] as [catName, catItems]}
+				<h3 class="invoice-category-header">{catName}</h3>
+				<div class="invoice-list">
+					{#each catItems as item, i}
 						<div class="invoice-item">
 							<div class="invoice-item-head">
 								<span class="invoice-num">{i + 1}.</span>
-								<span class="invoice-name">{service.name}</span>
-								<span class="invoice-price">{formatVND(dur.priceVND)}</span>
+								<span class="invoice-name">{item.serviceName}</span>
+								<span class="invoice-price">{formatVND(item.priceVND)}</span>
 							</div>
 							<div class="invoice-item-details">
 								<div class="invoice-detail-row">
@@ -585,31 +647,34 @@
 										<path d="M12 6v6l4 2" />
 									</svg>
 									<span class="detail-label">Duration</span>
-									<span class="detail-value">{dur.label}</span>
+									<span class="detail-value">{item.durationLabel}</span>
 								</div>
-								{#if categoryId === 'body-massage'}
+								{#if item.categoryId === 'body-massage'}
 									<div class="invoice-detail-row">
 										<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 											<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
 											<circle cx="12" cy="7" r="4" />
 										</svg>
 										<span class="detail-label">Therapist</span>
-										<span class="detail-value">{sel.therapist.charAt(0).toUpperCase() + sel.therapist.slice(1)}</span>
+										<span class="detail-value">{item.therapist.charAt(0).toUpperCase() + item.therapist.slice(1)}</span>
 									</div>
 									<div class="invoice-detail-row">
 										<svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-											<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+											<path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2" />
+											<path d="M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v6" />
+											<path d="M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8" />
+											<path d="M18 8a2 2 0 012 2v7.4a2 2 0 01-.6 1.4L15 23" />
+											<path d="M6 14l-1.5 2" />
 										</svg>
 										<span class="detail-label">Strength</span>
-										<span class="detail-value">{sel.strength.charAt(0).toUpperCase() + sel.strength.slice(1)}</span>
+										<span class="detail-value">{item.strength.charAt(0).toUpperCase() + item.strength.slice(1)}</span>
 									</div>
 								{/if}
 							</div>
 						</div>
-					{/if}
-				{/each}
-			</div>
-
+					{/each}
+				</div>
+			{/each}
 		</div>
 
 		<div class="invoice-footer">
@@ -622,23 +687,22 @@
 	</div>
 {/if}
 
-{#if showOrderConfirm && category}
+{#if showOrderConfirm}
 	<div class="invoice-modal">
 		{@render pageHeader('Order Submitted')}
 		<div class="invoice-scroll">
-			<div class="order-confirm-list">
-				{#each [...selectedServices.entries()] as [name, sel], i}
-					{@const service = category.services.find(s => s.name === name)}
-					{@const dur = service?.durations.find(d => d.minutes === sel.minutes)}
-					{#if service && dur}
+			{#each [...allOrders().byCategory.entries()] as [catName, catItems]}
+				<div class="order-confirm-card">
+					<h3 class="order-confirm-card-title">{catName}</h3>
+					{#each catItems as item, i}
 						<div class="order-confirm-row">
 							<span class="order-confirm-num">{i + 1}.</span>
-							<span class="order-confirm-name">{service.name}</span>
-							<span class="order-confirm-price">{formatVND(dur.priceVND)}</span>
+							<span class="order-confirm-name">{item.serviceName}</span>
+							<span class="order-confirm-price">{formatVND(item.priceVND)}</span>
 						</div>
-					{/if}
-				{/each}
-			</div>
+					{/each}
+				</div>
+			{/each}
 
 			{@render totalCard()}
 
@@ -1014,9 +1078,9 @@
 	}
 
 	.section-label {
-		font-size: 0.85rem;
+		font-size: 0.72rem;
 		font-weight: 600;
-		color: #8b7355;
+		color: #6b6b6b;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		margin-bottom: 12px;
@@ -1132,6 +1196,31 @@
 		color: #6b5d4d;
 		background: rgba(107,93,77,0.1);
 		border: 1px solid rgba(107,93,77,0.2);
+	}
+
+	.note-textarea {
+		width: 100%;
+		padding: 14px 16px;
+		border-radius: 12px;
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(107,93,77,0.2);
+		color: #e8e0d6;
+		font-size: 0.95rem;
+		font-family: inherit;
+		font-weight: 400;
+		line-height: 1.5;
+		resize: vertical;
+		outline: none;
+		transition: border-color 0.2s, background 0.2s;
+	}
+
+	.note-textarea::placeholder {
+		color: #6b5d4d;
+	}
+
+	.note-textarea:focus {
+		border-color: rgba(193,154,107,0.5);
+		background: rgba(255,255,255,0.05);
 	}
 
 	.invoice-footer {
@@ -1370,6 +1459,20 @@
 		display: none;
 	}
 
+	.invoice-category-header {
+		font-family: 'Playfair Display', serif;
+		font-size: 1rem;
+		font-weight: 600;
+		color: #c19a6b;
+		letter-spacing: 0.04em;
+		margin-bottom: 12px;
+		margin-top: 20px;
+	}
+
+	.invoice-category-header:first-child {
+		margin-top: 0;
+	}
+
 	.invoice-list {
 		display: flex;
 		flex-direction: column;
@@ -1448,21 +1551,38 @@
 	}
 
 	/* Order Confirm modal */
-	.order-confirm-list {
+	.order-confirm-card {
+		padding: 16px;
+		border-radius: 14px;
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(193,154,107,0.12);
+		margin-bottom: 12px;
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
-		margin-bottom: 20px;
+		gap: 10px;
+	}
+
+	.order-confirm-card-title {
+		font-family: 'Playfair Display', serif;
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: #c19a6b;
+		letter-spacing: 0.04em;
+		padding-bottom: 8px;
+		border-bottom: 1px solid rgba(193,154,107,0.12);
 	}
 
 	.order-confirm-row {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		padding: 12px 16px;
-		border-radius: 12px;
-		background: rgba(255,255,255,0.03);
-		border: 1px solid rgba(193,154,107,0.12);
+		padding: 6px 0;
+		border-bottom: 1px solid rgba(107,93,77,0.1);
+	}
+
+	.order-confirm-row:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
 	}
 
 	.order-confirm-num {

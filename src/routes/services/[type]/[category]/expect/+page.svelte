@@ -34,13 +34,13 @@
 </script>
 
 <svelte:head>
-	<title>What to Expect — Ngan Ha Spa</title>
+	<title>What to Expect? — Ngan Ha Spa</title>
 </svelte:head>
 
 <main>
 	<div class="page" class:visible>
 		<div class="header">
-			<h1 class="title">What to Expect</h1>
+			<h1 class="title">What to Expect?</h1>
 			<div class="divider"></div>
 		</div>
 
@@ -86,22 +86,22 @@
 			<div class="section">
 				<h2 class="step-detail-title">Service</h2>
 				<div class="step-detail-items">
-					{#each selectedItems as item, i}
-						<div class="step-detail-card service-card">
+					<div class="step-detail-card services-combined-card">
+						{#each selectedItems as item, i}
 							<div class="service-card-head">
 								<span class="service-card-num">{i + 1}.</span>
 								<span class="step-detail-name">{item.name}</span>
 								<span class="service-card-mins">{item.minutes} min</span>
 							</div>
+						{/each}
+						<div class="service-total-row-inline">
+							<svg class="service-total-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="12" cy="12" r="10" />
+								<path d="M12 6v6l4 2" />
+							</svg>
+							<span class="service-total-label">Total service time</span>
+							<span class="service-total-value">{totalMinutes} min</span>
 						</div>
-					{/each}
-					<div class="service-total-row">
-						<svg class="service-total-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-							<circle cx="12" cy="12" r="10" />
-							<path d="M12 6v6l4 2" />
-						</svg>
-						<span class="service-total-label">Total service time</span>
-						<span class="service-total-value">{totalMinutes} min</span>
 					</div>
 					<p class="step-detail-note">You have the first 15 minutes to request for a new massage therapist.</p>
 				</div>
@@ -187,7 +187,7 @@
 		justify-content: center;
 		width: 100%;
 		max-width: 420px;
-		margin-top: 60px;
+		margin-top: 0;
 	}
 
 	.step {
@@ -259,7 +259,7 @@
 		margin-top: 36px;
 		display: flex;
 		flex-direction: column;
-		gap: 32px;
+		gap: 23px;
 	}
 
 	.section {
@@ -269,19 +269,19 @@
 	}
 
 	.step-detail-title {
-		font-family: 'Playfair Display', serif;
-		font-size: 1.2rem;
+		font-size: 0.72rem;
 		font-weight: 600;
-		color: #c19a6b;
-		letter-spacing: 0.04em;
-		margin-bottom: 16px;
+		color: #6b6b6b;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-bottom: 12px;
 		text-align: center;
 	}
 
 	.step-detail-items {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 4px;
 	}
 
 	.step-detail-card {
@@ -317,8 +317,11 @@
 	}
 
 	/* Service step cards */
-	.service-card {
-		padding: 12px 16px;
+	.services-combined-card {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 16px;
 	}
 
 	.service-card-head {
@@ -351,14 +354,13 @@
 		white-space: nowrap;
 	}
 
-	.service-total-row {
+	.service-total-row-inline {
 		display: flex;
 		align-items: center;
 		gap: 10px;
-		padding: 14px 16px;
-		border-radius: 14px;
-		background: rgba(255,255,255,0.03);
-		border: 1px solid rgba(193,154,107,0.12);
+		padding: 12px 0 0;
+		margin-top: 4px;
+		border-top: 1px solid rgba(193,154,107,0.12);
 	}
 
 	.service-total-icon {

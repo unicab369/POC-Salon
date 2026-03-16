@@ -6,7 +6,9 @@
       "Bash(npm run build:*)",
       "Bash(ls:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npx svelte-check:*)"
+      "Bash(npx svelte-check:*)",
+      "Bash(xargs:*)",
+      "Bash(npx vite build:*)"
     ]
   }
 }
